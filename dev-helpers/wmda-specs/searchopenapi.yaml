@@ -1,0 +1,4603 @@
+openapi: 3.0.3
+info:
+  title: WMDA Search & Match API
+  description: >-
+    This is WMDA Search & Match API OpenAPI 3 specification published through
+    Swagger-ui interface.  You can find out more about     Swagger at
+    [http://swagger.io](http://swagger.io) or on [irc.freenode.net,
+    #swagger](http://swagger.io/irc/).      For this sample, you need to use the
+    `client_id`, `client_secret` in `client_credentials` grant type to test the
+    authorization.
+  termsOfService: 'https://search.wmda.info/terms'
+  contact:
+    email: support@wmda.info
+  version: 1.0.0
+externalDocs:
+  description: Find out more about this
+  url: 'http://example.com'
+servers:
+  - url: 'https://{environment}.wmda.info/api/v2'
+tags:
+  - name: patients
+    description: Manage patients
+    externalDocs:
+      description: Find out more
+      url: 'https://{environment}-search.wmda.info'
+  - name: searches
+    description: Manage searches
+    externalDocs:
+      description: Find out more
+      url: 'https://{environment}-search.wmda.info'
+  - name: users
+    description: Manage users
+    externalDocs:
+      description: Find out more
+      url: 'https://{environment}-search.wmda.info'
+paths:
+  /patients:
+    post:
+      tags:
+        - patients
+      summary: Create a new patient
+      operationId: createPatient
+      requestBody:
+        description: Patient object to be created
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/patient'
+              required:
+                - ethn
+                - hla
+                - pId
+            example:
+              pId: MypId-01
+              hla:
+                a:
+                  dna:
+                    field1: '24:02'
+                    field2: '31:01'
+                b:
+                  dna:
+                    field1: '35:08'
+                    field2: '39:13'
+                c:
+                  dna:
+                    field1: '04:01'
+                    field2: '07:02'
+                drb1:
+                  dna:
+                    field1: '08:07'
+                    field2: '11:04'
+                dqb1:
+                  dna:
+                    field1: '03:01'
+                    field2: '04:01'
+                dpb1:
+                  dna:
+                    field1: '112:01'
+                    field2: '114:01'
+                drb3:
+                  dna:
+                    field1: '03:01'
+                    field2: '03:02'
+                drb4:
+                  dna:
+                    field1: '04:01'
+                    field2: '04:02'
+                drb5:
+                  dna:
+                    field1: '05:01'
+                    field2: '05:02'
+                dpa1:
+                  dna:
+                    field1: '01:01G'
+                    field2: '01:02G'
+                dqa1:
+                  dna:
+                    field1: '01:01G'
+                    field2: '01:02G'
+              idm:
+                cmvStatus: 'N'
+              birthDate: '1983-04-24'
+              diagnosis:
+                diag: AML
+                diagText: Acute Myeloid Leukemia
+                diagDate: '2019-04-24'
+              disPha: C2
+              ethn: HICA
+              pool: NL
+              grafId: dr BM
+              abo: A
+              rhesus: P
+              weight: 86
+              sex: F
+              legalTerms: true
+              urgent: true
+              comment: This patient was created using Swagger UI
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/patientResponse'
+              example:
+                wmdaId: 99999
+                pId: MypId-01
+                hla:
+                  a:
+                    dna:
+                      field1: '24:02'
+                      field2: '31:01'
+                  b:
+                    dna:
+                      field1: '35:08'
+                      field2: '39:13'
+                  c:
+                    dna:
+                      field1: '04:01'
+                      field2: '07:02'
+                  drb1:
+                    dna:
+                      field1: '08:07'
+                      field2: '11:04'
+                  dqb1:
+                    dna:
+                      field1: '03:01'
+                      field2: '04:01'
+                  dpb1:
+                    dna:
+                      field1: '112:01'
+                      field2: '114:01'
+                  drb3:
+                    dna:
+                      field1: '03:01'
+                      field2: '03:02'
+                  drb4:
+                    dna:
+                      field1: '04:01'
+                      field2: '04:02'
+                  drb5:
+                    dna:
+                      field1: '05:01'
+                      field2: '05:02'
+                  dpa1:
+                    dna:
+                      field1: '01:01G'
+                      field2: '01:02G'
+                  dqa1:
+                    dna:
+                      field1: '01:01G'
+                      field2: '01:02G'
+                idm:
+                  cmvStatus: 'N'
+                birthDate: '1983-04-24'
+                diagnosis:
+                  diag: AML
+                  diagText: Acute Myeloid Leukemia
+                  diagDate: '2019-04-24'
+                disPha: C2
+                ethn: HICA
+                pool: DE
+                grafId: dr BM
+                abo: A
+                rhesus: P
+                weight: 86
+                sex: F
+                legalTerms: true
+                urgent: true
+                comment: This patient was created using Swagger UI
+                createdBy: my@my.com
+                lastUpdated: '2019-10-15T16:28:22Z'
+                lastViewed: '2019-10-15T16:28:22Z'
+                status: NEW
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Request validation failed.
+                fieldErrors:
+                  - key: hla.a.dna.field1
+                    errors:
+                      message:
+                        - The hla a 1 field is required.
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+    put:
+      tags:
+        - patients
+      summary: Update an existing patient
+      operationId: updatePatient
+      requestBody:
+        description: Patient object for update
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/patient'
+            example:
+              wmdaId: 1234
+              hla:
+                a:
+                  dna:
+                    field1: '24:02'
+                    field2: '31:01'
+                b:
+                  dna:
+                    field1: '35:08'
+                    field2: '39:13'
+                c:
+                  dna:
+                    field1: '04:01'
+                    field2: '07:02'
+                drb1:
+                  dna:
+                    field1: '08:07'
+                    field2: '11:04'
+                dqb1:
+                  dna:
+                    field1: '03:01'
+                    field2: '04:01'
+                dpb1:
+                  dna:
+                    field1: '112:01'
+                    field2: '114:01'
+                drb3:
+                  dna:
+                    field1: '03:01'
+                    field2: '03:02'
+                drb4:
+                  dna:
+                    field1: '04:01'
+                    field2: '04:02'
+                drb5:
+                  dna:
+                    field1: '05:01'
+                    field2: '05:02'
+                dpa1:
+                  dna:
+                    field1: '01:01G'
+                    field2: '01:02G'
+                dqa1:
+                  dna:
+                    field1: '01:01G'
+                    field2: '01:02G'
+              idm:
+                cmvStatus: 'N'
+              birthDate: '1983-04-24'
+              diagnosis:
+                diag: AML
+                diagText: Acute Myeloid Leukemia
+                diagDate: '2019-04-24'
+              disPha: C2
+              ethn: HICA
+              pool: NL
+              grafId: dr BM
+              abo: A
+              rhesus: P
+              weight: 86
+              sex: F
+              legalTerms: true
+              urgent: true
+              comment: This patient was updated using Swagger UI
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/patientResponse'
+              example:
+                wmdaId: 9999
+                pId: 9999
+                hla:
+                  a:
+                    dna:
+                      field1: '24:02'
+                      field2: '31:01'
+                  b:
+                    dna:
+                      field1: '35:08'
+                      field2: '39:13'
+                  c:
+                    dna:
+                      field1: '04:01'
+                      field2: '07:02'
+                  drb1:
+                    dna:
+                      field1: '08:07'
+                      field2: '11:04'
+                  dqb1:
+                    dna:
+                      field1: '03:01'
+                      field2: '04:01'
+                  dpb1:
+                    dna:
+                      field1: '112:01'
+                      field2: '114:01'
+                  drb3:
+                    dna:
+                      field1: '03:01'
+                      field2: '03:02'
+                  drb4:
+                    dna:
+                      field1: '04:01'
+                      field2: '04:02'
+                  drb5:
+                    dna:
+                      field1: '05:01'
+                      field2: '05:02'
+                  dpa1:
+                    dna:
+                      field1: '01:01G'
+                      field2: '01:02G'
+                  dqa1:
+                    dna:
+                      field1: '01:01G'
+                      field2: '01:02G'
+                idm:
+                  cmvStatus: 'N'
+                birthDate: '1983-04-24'
+                diagnosis:
+                  diag: AML
+                  diagText: Acute Myeloid Leukemia
+                  diagDate: '2019-04-24'
+                disPha: C2
+                ethn: HICA
+                pool: NL
+                grafId: dr BM
+                abo: A
+                rhesus: P
+                weight: 86
+                sex: F
+                legalTerms: true
+                urgent: true
+                comment: This patient was updated using Swagger UI
+                createdBy: my@my.com
+                lastUpdated: '2022-10-12T11:24:31Z'
+                lastViewed: '2022-11-13T12:43:31Z'
+                status: ACT
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Request validation failed.
+                fieldErrors:
+                  - key: hla.a.dna.field1
+                    errors:
+                      message:
+                        - The hla a 1 field is required.
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: The requested resource could not be found.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+    get:
+      tags:
+        - patients
+      summary: Retrieve patients list
+      operationId: listPatients
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of patients per page.
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Starting position of the requested page.
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+            enum:
+              - wmdaId
+              - pId
+              - status
+              - birthDate
+              - urgent
+              - ethn
+              - lastUpdated
+              - lastViewed
+              - createdBy
+          description: Field name that should be used for ordering.
+        - in: query
+          name: orderType
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: >-
+            Should the patients be ordered in ascending (asc) or descending
+            (desc) direction?
+        - in: query
+          name: createdBy
+          schema:
+            type: string
+          description: >-
+            userId (e-mail address) of WMDA Search & Match user who created the
+            patients.
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - NEW
+              - PRE
+              - ACT
+              - SUS
+              - STP
+          description: Status of the patients that you are requesting.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/patientListResponse'
+              example:
+                paging:
+                  limit: 40
+                  offset: 0
+                  totalCount: 2
+                data:
+                  patient:
+                    - wmdaId: 99999
+                      pId: 99999999
+                      status: null
+                      birthDate: null
+                      urgent: false
+                      ethn: UK
+                      createdBy: email@email.com
+                      lastUpdated: '2011-02-23T12:59:50Z'
+                      lastViewed: '2014-10-03T11:14:43Z'
+                      summary:
+                        requests:
+                          - searchResultId: 9999
+                            matchEngine: 1
+                            algorithm: H
+                            searchType: DR
+                            status: Done
+                            resultsSummary: >-
+                              555 donors at 10/10 search (at HLA-A, B, C, DRB1,
+                              DQB1), using haplotype frequencies algorithm.
+                            creationDate: '2018-03-08T12:50:02Z'
+                            updatedDate: '2019-06-13T15:04:52Z'
+                          - searchResultId: 9998
+                            matchEngine: 1
+                            algorithm: H
+                            searchType: CB
+                            status: Done
+                            resultsSummary: >-
+                              9,999 cords at n/10 search (at HLA-A, B, C, DRB1,
+                              DQB1) allele matched, two mismatches on any locus,
+                              using haplotype frequencies algorithm.
+                            creationDate: '2012-01-02T12:50:11Z'
+                            updatedDate: '2014-03-12T15:04:52Z'
+                    - wmdaId: 99977
+                      pId: Example pId
+                      status: null
+                      birthDate: '1888-08-08'
+                      urgent: false
+                      ethn: UK
+                      createdBy: email@email.com
+                      lastUpdated: '2011-02-22T12:07:31Z'
+                      lastViewed: '2015-05-05T16:24:28Z'
+                      summary:
+                        requests: []
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Request validation failed.
+                fieldErrors:
+                  - key: orderType
+                    errors:
+                      message:
+                        - The selected order type is invalid.
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+  '/patients/{wmdaId}':
+    get:
+      tags:
+        - patients
+      summary: Retrieve individual patient resource data
+      operationId: retrievePatient
+      parameters:
+        - in: path
+          name: wmdaId
+          schema:
+            type: integer
+            format: int4
+          required: true
+          description: wmdaId of patient you are requesting information for.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/patientResponse'
+              example:
+                wmdaId: 99999
+                pId: MypId-01
+                hla:
+                  a:
+                    dna:
+                      field1: '24:02'
+                      field2: '31:01'
+                  b:
+                    dna:
+                      field1: '35:08'
+                      field2: '39:13'
+                  c:
+                    dna:
+                      field1: '04:01'
+                      field2: '07:02'
+                  drb1:
+                    dna:
+                      field1: '08:07'
+                      field2: '11:04'
+                  dqb1:
+                    dna:
+                      field1: '03:01'
+                      field2: '04:01'
+                  dpb1:
+                    dna:
+                      field1: '112:01'
+                      field2: '114:01'
+                  drb3:
+                    dna:
+                      field1: '03:01'
+                      field2: '03:02'
+                  drb4:
+                    dna:
+                      field1: '04:01'
+                      field2: '04:02'
+                  drb5:
+                    dna:
+                      field1: '05:01'
+                      field2: '05:02'
+                  dpa1:
+                    dna:
+                      field1: '01:01G'
+                      field2: '01:02G'
+                  dqa1:
+                    dna:
+                      field1: '01:01G'
+                      field2: '01:02G'
+                idm:
+                  cmvStatus: 'N'
+                birthDate: '1983-04-24'
+                diagnosis:
+                  diag: AML
+                  diagText: Acute Myeloid Leukemia
+                  diagDate: '2019-04-24'
+                disPha: C2
+                ethn: HICA
+                pool: NL
+                grafId: dr BM
+                abo: A
+                rhesus: P
+                weight: 86
+                sex: F
+                legalTerms: true
+                urgent: true
+                comment: This patient was created using Swagger UI
+                createdBy: my@my.com
+                lastUpdated: '2019-10-15T16:28:22Z'
+                lastViewed: '2019-10-15T16:28:22Z'
+                status: NEW
+        '400':
+          description: Bad request
+          content:
+            application/json: {}
+        '401':
+          description: Unauthenticated
+          content:
+            application/json: {}
+        '403':
+          description: Forbidden
+          content:
+            application/json: {}
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json: {}
+        '429':
+          description: Too Many Requests
+          content:
+            application/json: {}
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json: {}
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json: {}
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+  '/patients/assignuser':
+    put:
+      tags:
+        - patients
+      summary: Update or set the assigned user for a patient
+      operationId: updatePatientAssignedUser
+      requestBody:
+        description: wmdaId and userId for update
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/patientAssignUser'
+              required:
+                - wmdaId
+                - userId
+              additionalProperties: false
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  wmdaId:
+                    allOf:
+                      - $ref: '#/components/schemas/wmdaId'
+                  status:
+                    allOf:
+                      - $ref: '#/components/schemas/patientStatus'
+              example:
+                wmdaId: 99999
+                status: SUS
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Request validation failed.
+                fieldErrors:
+                  - key: pId
+                    errors:
+                      message: Wrong pId or wmdaId
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: The requested resource could not be found.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+  '/patients/status':
+    put:
+      tags:
+        - patients
+      summary: Update an existing patient's status
+      operationId: updatePatientStatus
+      requestBody:
+        description: Patient object for update
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/patientStatusJSON'
+              required:
+                - pId
+                - pNewStat
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  wmdaId:
+                    allOf:
+                      - $ref: '#/components/schemas/wmdaId'
+                  status:
+                    allOf:
+                      - $ref: '#/components/schemas/patientStatus'
+              example:
+                wmdaId: 99999
+                status: SUS
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Request validation failed.
+                fieldErrors:
+                  - key: pId
+                    errors:
+                      message: Wrong pId or wmdaId
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: The requested resource could not be found.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+  '/patients/searches':
+    post:
+      tags:
+        - searches
+      summary: Start/update a patient search
+      operationId: sendSearchRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/searchRequest'
+            examples:
+              DrFullMatchHapEGui:
+                description: >-
+                  These are the parameters that are set when executing a DR
+                  Search in the GUI for HAP-E.
+                value:
+                  wmdaId: 1234
+                  matchEngine: 2
+                  searchType: DR
+                  OverallMismatches: 0
+              DrSingleMisMatchHapEGUI:
+                description: >-
+                  These are the parameters that are set when executing a
+                  single mismatch DR Search in the GUI for HAP-E.
+                value:
+                  wmdaId: 1234
+                  matchEngine: 2
+                  searchType: DR
+                  OverallMismatches: 1
+              DrTwoMisMatchesHapEGUI:
+                description: >-
+                  These are the parameters that are set when executing a
+                  two mismatch DR Search in the GUI for HAP-E.
+                value:
+                  wmdaId: 1234
+                  matchEngine: 2
+                  searchType: DR
+                  OverallMismatches: 2
+              DrZeroMisMatchesDefaultHapEGUI:
+                description: >-
+                  These are the parameters that are set when executing a
+                  two mismatch DR Search in the GUI for HAP-E.
+                value:
+                  wmdaId: 1234
+                  matchEngine: 2
+                  searchType: DR
+              CbFullMatchHapEGUI:
+                description: >-
+                  These are the parameters that are set when executing a DR
+                  Search in the GUI for HAP-E.
+                value:
+                  wmdaId: 1234
+                  matchEngine: 2
+                  searchType: CB
+                  OverallMismatches: 0
+              CbSingleMisMatchHapEGUI:
+                description: >-
+                  These are the parameters that are set when executing a
+                  single mismatch DR Search in the GUI for HAP-E.
+                value:
+                  wmdaId: 1234
+                  matchEngine: 2
+                  searchType: CB
+                  OverallMismatches: 1
+              CbTwoMisMatchesHapEGUI:
+                description: >-
+                  These are the parameters that are set when executing a
+                  two mismatch DR Search in the GUI for HAP-E.
+                value:
+                  wmdaId: 1234
+                  matchEngine: 2
+                  searchType: CB
+                  OverallMismatches: 2
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/startUpdateSearchResponse'
+              example:
+                searchId: 9999
+                patient:
+                  wmdaId: 99999
+                  pId: 99999
+                  hla:
+                    a:
+                      dna:
+                        field1: '02:01'
+                        field2: '11:MP'
+                    b:
+                      dna:
+                        field1: '07:XX'
+                        field2: '39:KBY'
+                    c:
+                      dna:
+                        field1: '07:CSAH'
+                        field2: '12:CF'
+                    drb1:
+                      dna:
+                        field1: '12:GS'
+                        field2: '15:CCZ'
+                    dqb1:
+                      dna:
+                        field1: '03:01'
+                        field2: '07:03'
+                    dpb1:
+                      dna:
+                        field1: '04:01'
+                        field2: '12:11'
+                    drb3:
+                      dna:
+                        field1: '12:GS'
+                        field2: '15:15'
+                    drb4:
+                      dna:
+                        field1: '12:GS'
+                        field2: '15:CCZ'
+                    drb5:
+                      dna:
+                        field1: '01:01'
+                        field2: '05:02'
+                    dpa1:
+                      dna:
+                        field1: '01:01G'
+                        field2: '01:02G'
+                    dqa1:
+                      dna:
+                        field1: '01:01G'
+                        field2: '01:01'
+                  idm:
+                    cmvStatus: 'N'
+                  birthDate: null
+                  diagnosis:
+                    diag: AML
+                    diagText: Acute Myeloid Leukemia
+                    diagDate: '2022-02-22'
+                  disPha: N1
+                  ethn: UK
+                  pool: FR
+                  grafId: null
+                  abo: null
+                  rhesus: null
+                  weight: null
+                  sex: null
+                  legalTerms: false
+                  urgent: false
+                  comment: null
+                  createdBy: my@my.com
+                  lastUpdated: '2012-01-16T15:23:43Z'
+                  lastViewed: '2022-05-17T11:04:43Z'
+                  status: ACT
+                requests:
+                  - searchResultsId: null
+                    matchEngine: 1
+                    searchType: DR
+                    searchParameters:
+                      hlaDifferences:
+                        overall:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        abdrb1:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        a:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        b:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        c:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        drb1:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        dqb1:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                    status: Pending
+                  - searchResultsId: null
+                    matchEngine: 1
+                    searchType: CB
+                    searchParameters:
+                      hlaDifferences:
+                        overall:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        abdrb1:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        a:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        b:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        c:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        drb1:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                        dqb1:
+                          antigenMismatches: '0'
+                          mismatches: '0'
+                    status: Pending
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                message: Request validation failed.
+                fieldErrors:
+                  - key: requests.searchParameters.hlaDifferences.dqb1.mismatches
+                    errors:
+                      message: Field mismatches is invalid on DR request.
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: The requested resource could not be found.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+  '/patients/{wmdaId}/searches':
+    get:
+      tags:
+        - searches
+      summary: Retrieve patient search summary
+      operationId: retrieveSummary
+      parameters:
+        - in: path
+          name: wmdaId
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/wmdaId'
+          required: true
+          description: >-
+            wmdaId of patient you want to find search information for. This is
+            NOT the pId, but the wmdaId you received in the response body after
+            creating your patient.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/searchSummaryResponse'
+              example:
+                searchId: 9999
+                patient:
+                  wmdaId: 99999
+                  pId: 99999
+                  hla:
+                    a:
+                      dna:
+                        field1: '02:11'
+                        field2: '11:11'
+                    b:
+                      dna:
+                        field1: '07:XX'
+                        field2: '39:KBY'
+                    c:
+                      dna:
+                        field1: '07:03'
+                        field2: '12:CF'
+                    drb1:
+                      dna:
+                        field1: '12:12'
+                        field2: '15:CCZ'
+                    dqb1:
+                      dna:
+                        field1: '03:01'
+                        field2: '06:02'
+                    dpb1:
+                      dna:
+                        field1: '04:01'
+                        field2: '03:01'
+                    drb3:
+                      dna:
+                        field1: '12:GS'
+                        field2: '15:CCZ'
+                    drb4:
+                      dna:
+                        field1: '12:GS'
+                        field2: '15:CCZ'
+                    drb5:
+                      dna:
+                        field1: '01:01'
+                        field2: '05:01'
+                    dpa1:
+                      dna:
+                        field1: '01:01'
+                        field2: '01:02G'
+                    dqa1:
+                      dna:
+                        field1: '01:01'
+                        field2: '01:02G'
+                  idm:
+                    cmvStatus: 'N'
+                  birthDate: null
+                  diagnosis:
+                    diag: AAA
+                    diagText: Example Diagnosis
+                    diagDate: '2020-02-22'
+                  disPha: N1
+                  ethn: UK
+                  pool: FR
+                  grafId: null
+                  abo: null
+                  rhesus: null
+                  weight: null
+                  sex: null
+                  legalTerms: false
+                  urgent: false
+                  comment: null
+                  createdBy: email@email.com
+                  lastUpdated: '2020-11-16T13:23:43Z'
+                  lastViewed: '2020-11-17T11:09:43Z'
+                  status: ACT
+                requests:
+                  - matchEngine: 1
+                    searchResultsId: 9999
+                    searchType: CB
+                    searchParameters:
+                      hlaDifferences:
+                        overall:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        abdrb1:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        a:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        b:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        c:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        drb1:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        dqb1:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                      algorithm: null
+                    status: Pending
+                    summary: null
+                  - matchEngine: 1
+                    searchResultsId: 9999
+                    searchType: DR
+                    searchParameters:
+                      hlaDifferences:
+                        overall:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        abdrb1:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        a:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        b:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        c:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        drb1:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                        dqb1:
+                          mismatches: '0'
+                          antigenMismatches: '0'
+                      algorithm: null
+                    status: Pending
+                    summary: null
+        '400':
+          description: Bad request
+          content:
+            application/json: {}
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: The requested resource could not be found.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+  '/patients/{wmdaId}/matchengine/{matchEngine}/results/{searchResultsId}':
+    get:
+      tags:
+        - searches
+      summary: Retrieve search results
+      operationId: retrieveSearchResults
+      parameters:
+        - in: path
+          name: wmdaId
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/wmdaId'
+          required: true
+          description: >-
+            wmdaId of patient you are requesting information for. This is NOT
+            the pId, but the wmdaId you received in the response body after
+            creating your patient.
+        - in: path
+          name: matchEngine
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/matchEngine'
+        - in: path
+          name: searchResultsId
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/searchResultsId'
+          required: true
+          description: >-
+            Unique identifier of the search results. Can be determined by
+            retrieving patient search summary
+        - in: query
+          name: algorithm
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/algorithm'
+          required: false
+          description: >-
+            Optional parameter. Haplotype frequencies (H) or Allele frequencies
+            (F) algorithm. Only relevant for matching engine 1 (Optimatch). This
+            determine which method is used to calculate probabilities of match.
+            Haplotypes frequencies is the default in the GUI and takes linkage
+            information into account and provides the most accurate match
+            probabilities.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/searchResultsResponseHapeCB'
+                  - $ref: '#/components/schemas/searchResultsResponseHapeDR'
+              examples:
+                CBSearchresultHAP-E:
+                  value: "{\n\t\"searchId\": 248215,\n\t\"searchResultsId\": 9651,\n\t\"matchDTime\": \"2019-12-09T14:07:49Z\",\n\t\"matchEngine\": 1,\n\t\"searchType\": \"CB\",\n\t\"searchParameters\": {\n\t\t\"hlaDifferences\": {\n            \"overall\": {\n                \"mismatches\": \"0\"\n            },\n            \"abdrb1\": {\n                \"mismatches\": \"0\"\n            },\n            \"a\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            },\n            \"b\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            },\n            \"c\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            },\n            \"drb1\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            },\n            \"dqb1\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            }\n        }\n\t},\n\t\"status\": \"Complete\",\n\t\"summary\": \"1,573 cords at n/10 search (at HLA-A, B, C, DRB1, DQB1) allele matched, two mismatches on any locus, using haplotype frequencies algorithm.\",\n\t\"statistics\": {\n\t\t\"donors0mm\": 10,\n\t\t\"donors1mm\": 0,\n\t\t\"donors2mm\": 0\n\t},\n\t\"patient\": {\n\t\t\"wmdaId\": 40312,\n\t\t\"pId\": \"Webinar patient 2\",\n\t\t\"hla\": {\n\t\t\t\"a\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": \"02:ANGA\",\n\t\t\t\t\t\"field2\": \"24:02\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"b\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": \"35:01\",\n\t\t\t\t\t\"field2\": \"39:BMFM\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"c\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": \"04:01\",\n\t\t\t\t\t\"field2\": \"12:03\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"drb1\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": \"01:01\",\n\t\t\t\t\t\"field2\": \"16:01\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"dqb1\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": \"05:01\",\n\t\t\t\t\t\"field2\": \"05:02\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"dpb1\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": \"04:FNXH\",\n\t\t\t\t\t\"field2\": null\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"drb3\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\"field2\": null\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"drb4\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\"field2\": null\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"drb5\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\"field2\": null\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"dpa1\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": \"01:03\",\n\t\t\t\t\t\"field2\": \"01:47\"\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"dqa1\": {\n\t\t\t\t\"dna\": {\n\t\t\t\t\t\"field1\": \"01:01\",\n\t\t\t\t\t\"field2\": \"01:02\"\n\t\t\t\t}\n\t\t\t}\n\t\t},\n\t\t\"idm\": {\n\t\t\t\"cmvStatus\": \"N\"\n\t\t},\n\t\t\"birthDate\": null,\n\t\t\"diagnosis\": {\n\t\t\t\"diag\": \"AML\",\n\t\t\t\"diagText\": \"Acute Myelogenous Leukaemia\",\n\t\t\t\"diagDate\": \"2019-04-29\"\n\t\t},\n\t\t\"disPha\": \"PF\",\n\t\t\"ethn\": \"UK\",\n\t\t\"pool\": \"NL\",\n\t\t\"grafId\": \"Dr. HG\",\n\t\t\"abo\": \"AB\",\n\t\t\"rhesus\": \"P\",\n\t\t\"weight\": 101,\n\t\t\"sex\": \"M\",\n\t\t\"legalTerms\": true,\n\t\t\"urgent\": false,\n\t\t\"comment\": \"This is a test comment\",\n\t\t\"status\": \"ACT\"\n\t},\n\t\"donors\": [\n\t\t{\n\t\t\t\"id\": \"12697\",\n\t\t\t\"donSer\": 284685,\n\t\t\t\"donorType\": \"C\",\n\t\t\t\"donPool\": 4993,\n\t\t\t\"haplosetId\": 11,\n\t\t\t\"birthDate\": \"2015-01-01\",\n\t\t\t\"status\": \"AV\",\n\t\t\t\"sex\": \"F\",\n\t\t\t\"ethn\": \"CAEU\",\n\t\t\t\"vol\": 26,\n\t\t\t\"volFrzn\": 25,\n\t\t\t\"tnc\": 828000000,\n\t\t\t\"tncFrzn\": 591000000,\n\t\t\t\"cd34pc\": 1400000.0,\n\t\t\t\"cd34pcFrzn\": 2500000.0,\n\t\t\t\"mncFrzn\": 468000000,\n\t\t\t\"viability\": 78,\n\t\t\t\"ccr5\": \"DW\",\n\t\t\t\"attSeg\": 5,\n\t\t\t\"idm\": {\n\t\t\t\t\"antiCmv\": \"G\",\n\t\t\t\t\"antiCmvDate\": \"2021-02-02\",\n\t\t\t\t\"cmvNat\": \"P\",\n\t\t\t\t\"cmvNatDate\": \"2021-02-19\"\n\t\t\t},\n\t\t\t\"abo\": \"AB\",\n\t\t\t\"rhesus\": \"P\",\n\t\t\t\"bankManufIdWmda\": 1234,\n\t\t\t\"regAccredStatus\": \"none\",\n\t\t\t\"regAccredCbb\": \"FACT\",\n\t\t\t\"hla\": {\n\t\t\t\t\"a\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": \"02:XX\",\n\t\t\t\t\t\t\"field2\": \"24:XX\"\n\t\t\t\t\t},\n\t\t\t\t\t\"ser\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"b\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": \"35:XX\",\n\t\t\t\t\t\t\"field2\": \"39:XX\"\n\t\t\t\t\t},\n\t\t\t\t\t\"ser\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"c\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t},\n\t\t\t\t\t\"ser\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"drb1\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": \"01:XX\",\n\t\t\t\t\t\t\"field2\": \"16:XX\"\n\t\t\t\t\t},\n\t\t\t\t\t\"ser\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"drb3\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"drb4\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"drb5\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"dqa1\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"dqb1\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t},\n\t\t\t\t\t\"ser\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"dpa1\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\t\"dpb1\": {\n\t\t\t\t\t\"dna\": {\n\t\t\t\t\t\t\"field1\": null,\n\t\t\t\t\t\t\"field2\": null\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t},\n\t\t\t\"mismatches\": [\n\t\t\t\t{\n\t\t\t\t\t\"locus\": \"DRB3*\",\n\t\t\t\t\t\"position\": 1,\n\t\t\t\t\t\"type\": \"Antigen\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"locus\": \"DRB3*\",\n\t\t\t\t\t\"position\": 2,\n\t\t\t\t\t\"type\": \"Antigen\"\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"matchClass\": \"10/10\",\n\t\t\t\"matchGrade\": \"0X/816/7500-7500-7500-0-7500/00/0-0000/0/0000000000000284685\",\n\t\t\t\"nmdpGrade\": \"PPPPP\",\n\t\t\t\"p0\": 92,\n\t\t\t\"p1\": 7,\n\t\t\t\"p2\": 1,\n\t\t\t\"pa\": 99,\n\t\t\t\"pb\": 98,\n\t\t\t\"pc\": 96,\n\t\t\t\"pdr\": 99,\n\t\t\t\"pdq\": 97,\n\t\t\t\"diffString\": null,\n\t\t\t\"inexp\": 0,\n\t\t\t\"dpb1grade\": \"H\",\n\t\t\t\"tceDigest\": {\n\t\t\t\t\"countPer\": 0,\n\t\t\t\t\"countNph\": 1,\n\t\t\t\t\"countNpg\": 0,\n\t\t\t\t\"countNd\": 0,\n\t\t\t\t\"probPer\": 0,\n\t\t\t\t\"probNph\": 100,\n\t\t\t\t\"probNpg\": 0,\n\t\t\t\t\"probNd\": 0\n\t\t\t}\n\t\t}\n\t],\n\t\"inexp\": 11,\n\t\"total\": 1573\n}"
+                DRSearchresultHAP-E:
+                  value: "{\n    \"searchId\": 9999,\n    \"searchResultsId\": 9999,\n    \"matchDTime\": \"2020-02-15T22:45:14Z\",\n    \"matchEngine\": 1,\n    \"searchType\": \"DR\",\n    \"searchParameters\": {\n        \"hlaDifferences\": {\n            \"overall\": {\n                \"mismatches\": \"0\"\n            },\n            \"abdrb1\": {\n                \"mismatches\": \"0\"\n            },\n            \"a\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            },\n            \"b\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            },\n            \"c\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            },\n            \"drb1\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            },\n            \"dqb1\": {\n                \"mismatches\": \"0\",\n                \"matchResolution\": \"A\"\n            }\n        }\n    },\n    \"status\": \"Complete\",\n    \"summary\": \"10 donors at 10/10 search (at HLA-A, B, C, DRB1, DQB1), using HAP-E matching engine.\",\n    \"statistics\": {\n        \"donors0mm\": 10,\n        \"donors1mm\": 0,\n        \"donors2mm\": 0\n    },\n    \"patient\": {\n        \"wmdaId\": 99999,\n        \"pId\": \"99999\",\n        \"hla\": {\n            \"a\": {\n                \"dna\": {\n                    \"field1\": \"02:01\",\n                    \"field2\": \"11:11\"\n                }\n            },\n            \"b\": {\n                \"dna\": {\n                    \"field1\": \"07:XX\",\n                    \"field2\": \"39:01\"\n                }\n            },\n            \"c\": {\n                \"dna\": {\n                    \"field1\": \"07:HBA\",\n                    \"field2\": \"12:12\"\n                }\n            },\n            \"drb1\": {\n                \"dna\": {\n                    \"field1\": \"12:GS\",\n                    \"field2\": \"15:CCZ\"\n                }\n            },\n            \"dqb1\": {\n                \"dna\": {\n                    \"field1\": \"03:01\",\n                    \"field2\": \"06:02\"\n                }\n            },\n            \"dpb1\": {\n                \"dna\": {\n                    \"field1\": \"04:KBY\",\n                    \"field2\": \"03:01\"\n                }\n            },\n            \"drb3\": {\n                \"dna\": {\n                    \"field1\": \"12:GS\",\n                    \"field2\": \"15:CCZ\"\n                }\n            },\n            \"drb4\": {\n                \"dna\": {\n                    \"field1\": \"12:GS\",\n                    \"field2\": \"15:CCZ\"\n                }\n            },\n            \"drb5\": {\n                \"dna\": {\n                    \"field1\": \"01:01\",\n                    \"field2\": \"05:01\"\n                }\n            },\n            \"dpa1\": {\n                \"dna\": {\n                    \"field1\": \"01:01G\",\n                    \"field2\": \"01:02G\"\n                }\n            },\n            \"dqa1\": {\n                \"dna\": {\n                    \"field1\": \"01:02G\",\n                    \"field2\": \"01:01G\"\n                }\n            }\n        },\n        \"idm\": {\n            \"cmvStatus\": \"N\"\n        },\n        \"birthDate\": \"2018-01-01\",\n        \"diagnosis\": {\n            \"diag\": \"AML\",\n\t\t\t\"diagText\": \"Acute Myelogenous Leukaemia\",\n\t\t\t\"diagDate\": \"2019-04-29\"\n        },\n        \"disPha\": \"P9\",\n        \"ethn\": \"CAEU\",\n        \"pool\": \"NL\",\n        \"grafId\": \"Dr M\",\n        \"abo\": \"AB\",\n        \"rhesus\": \"N\",\n        \"weight\": 150,\n        \"sex\": \"M\",\n        \"legalTerms\": true,\n        \"urgent\": false,\n        \"comment\": \"This is a test comment\",\n        \"status\": \"ACT\"\n    },\n    \"donors\": [\n        {\n            \"id\": \"SPBLAL99999999\",\n            \"grid\": \"9991012070433202000\",\n            \"donSer\": 99999999,\n            \"donorType\": \"D\",\n            \"donPool\": 9999,\n            \"haplosetId\": 11,\n            \"birthDate\": \"1991-02-05\",\n            \"status\": \"AV\",\n            \"contactDate\": \"2015-01-01\",\n            \"sex\": \"F\",\n            \"ethn\": \"HISA\",\n            \"ccr5\": \"DD\",\n            \"idm\": {\n                \"antiCmv\": \"G\",\n                \"antiCmvDate\": \"2021-02-02\",\n                \"cmvNat\": \"P\",\n                \"cmvNatDate\": \"2021-02-19\"\n            },\n            \"abo\": \"A\",\n            \"rhesus\": \"N\",\n            \"regAccredStatus\": \"none\",\n            \"nmbrMarr\": 1,\n            \"nmbrPbsc\": 0,\n            \"hla\": {\n                \"a\": {\n                    \"dna\": {\n                        \"field1\": \"02:01\",\n                        \"field2\": \"11:01\"\n                    },\n                    \"ser\": {\n                        \"field1\": \"2\",\n                        \"field2\": \"3\"\n                    }\n                },\n                \"b\": {\n                    \"dna\": {\n                        \"field1\": \"07:AEGZD\",\n                        \"field2\": \"39:AMR\"\n                    },\n                    \"ser\": {\n                        \"field1\": \"7\",\n                        \"field2\": \"39\"\n                    }\n                },\n                \"c\": {\n                    \"dna\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    },\n                    \"ser\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    }\n                },\n                \"drb1\": {\n                    \"dna\": {\n                        \"field1\": \"12:11\",\n                        \"field2\": \"15:AD\"\n                    },\n                    \"ser\": {\n                        \"field1\": \"12\",\n                        \"field2\": \"11\"\n                    }\n                },\n                \"drb3\": {\n                    \"dna\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    }\n                },\n                \"drb4\": {\n                    \"dna\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    }\n                },\n                \"drb5\": {\n                    \"dna\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    }\n                },\n                \"dqa1\": {\n                    \"dna\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    }\n                },\n                \"dqb1\": {\n                    \"dna\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    },\n                    \"ser\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    }\n                },\n                \"dpa1\": {\n                    \"dna\": {\n                        \"field1\": null,\n                        \"field2\": null\n                    }\n                },\n                \"dpb1\": {\n                    \"dna\": {\n                        \"field1\": \"02:01\",\n                        \"field2\": \"02:01\"\n                    }\n                }\n            },\n            \"mismatches\": [\n                {\n                    \"locus\": \"DRB3*\",\n                    \"position\": 1,\n                    \"type\": \"Antigen\"\n                },\n                {\n                    \"locus\": \"DRB3*\",\n                    \"position\": 2,\n                    \"type\": \"Antigen\"\n                }\n            ],\n            \"matchClass\": \"10/10\",\n            \"matchGrade\": \"0X/816/7500-7500-7500-0-7500/00/0-0000/0/0000000000000284685\",\n\t\t\t\"nmdpGrade\": \"PPPPP\",\n            \"p0\": 92,\n            \"p1\": 7,\n            \"p2\": 1,\n            \"pa\": 99,\n            \"pb\": 98,\n            \"pc\": 96,\n            \"pdr\": 99,\n            \"pdq\": 97,\n            \"diffString\": null,\n            \"inexp\": 0,\n            \"dpb1grade\": \"H\",\n            \"tceDigest\": {\n                \"countPer\": 0,\n                \"countNph\": 1,\n                \"countNpg\": 0,\n                \"countNd\": 0,\n                \"probPer\": 0,\n                \"probNph\": 100,\n                \"probNpg\": 0,\n                \"probNd\": 0\n            }\n        }\n    ],\n    \"inexp\": 1,\n    \"total\": 42\n}"
+        '400':
+          description: Bad request
+          content:
+            application/json: {}
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: The requested resource could not be found.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+  '/patients/{wmdaId}/matchengine/{matchEngine}/reports/{searchResultsId}/donors/{donSer}':
+    get:
+      tags:
+        - searches
+      summary: Retrieve full details report for CB or DR
+      operationId: retrieveFullReport
+      parameters:
+        - in: path
+          name: wmdaId
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/wmdaId'
+          required: true
+          description: >-
+            wmdaId of patient you started the search for. This is NOT the pId,
+            but the wmdaId you received in the response body after creating your
+            patient.
+        - in: path
+          name: matchEngine
+          required: true
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/matchEngine'
+        - in: path
+          name: searchResultsId
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/searchResultsId'
+          required: true
+          description: >-
+            Unique identifier of the search results. Can be determined by
+            retrieving patient search summary
+        - in: path
+          name: donSer
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/donSer'
+          required: true
+          description: >-
+            Unique identifier of a donor within the search results. This is not
+            the GRID because the GRID has not been implemented 100%.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/fullReportResponseCB'
+                  - $ref: '#/components/schemas/fullReportResponseDR'
+              examples:
+                CB:
+                  value:
+                    searchId: 999
+                    searchResultsId: 9999
+                    searchType: CB
+                    matchDTime: '2020-11-11 22:42:08'
+                    registry:
+                      ion: ION-9999
+                      abbr: AA-AAAA
+                      orgName: Example Organisation Name
+                      orgNameAlt: ''
+                      orgType: DR
+                      iso3166: IL
+                      regBmdwCode: IIII
+                      regEmdisCode: ''
+                      regAccredStatus: none
+                      regAccredCbb: AABB
+                      visitAddress: 'Example Address 1, floor 1'
+                      visitAddress2: 'Example Address 2, floor 2'
+                      visitZipCode: '55555'
+                      visitCity: Example City
+                      visitState: ''
+                      visitCountry: Example Country
+                      phone: '+9999999999'
+                      fax: '+99999999999'
+                      email: email@email.com
+                    patient:
+                      wmdaId: 99999
+                      pId: 99999
+                      status: ACT
+                      hla:
+                        a:
+                          dna:
+                            field1: '01:01'
+                            field2: null
+                        b:
+                          dna:
+                            field1: '05:01'
+                            field2: null
+                        c:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb1:
+                          dna:
+                            field1: '11:11'
+                            field2: null
+                        dqb1:
+                          dna:
+                            field1: null
+                            field2: null
+                        dpb1:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb3:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb4:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb5:
+                          dna:
+                            field1: null
+                            field2: null
+                        dpa1:
+                          dna:
+                            field1: null
+                            field2: null
+                        dqa1:
+                          dna:
+                            field1: null
+                            field2: null
+                      idm:
+                        cmvStatus: P
+                      birthDate: null
+                      diagnosis:
+                        diag: null
+                        diagText: null
+                        diagDate: '2022-10-22'
+                      disPha: null
+                      ethn: UK
+                      pool: null
+                      grafId: null
+                      abo: A
+                      rhesus: P
+                      weight: null
+                      sex: M
+                      legalTerms: true
+                      urgent: false
+                      comment: null
+                      creationDate: '2020-10-01T15:03:41Z'
+                      lastUpdated: '2020-02-12T13:34:02Z'
+                      lastViewed: '2020-12-16T14:47:20Z'
+                      createdBy: email@email.com
+                      createdVia: web
+                      updatedVia: web
+                    matchData:
+                      id: AAA999999
+                      localId: null
+                      bagId: null
+                      donSer: 999999
+                      donorType: C
+                      donPool: 9999
+                      birthDate: null
+                      status: null
+                      sex: null
+                      ethn: null
+                      collDate: null
+                      procDate: null
+                      procMeth: null
+                      procMethType: null
+                      freezeDate: null
+                      freezeMeth: null
+                      prodMod: null
+                      bagType: null
+                      bags: null
+                      bankDistribIdWmda: null
+                      bankDistribIdEmdis: null
+                      bankManufIdWmda: null
+                      bankManufIdEmdis: null
+                      bactCult: null
+                      fungCult: null
+                      hemoStatus: null
+                      viabilityCells: null
+                      viabilityMethod: null
+                      viabilityDate: null
+                      vol: null
+                      volFrzn: 190
+                      tnc: null
+                      tncFrzn: 1880
+                      cd34pc: null
+                      cd34pcFrzn: null
+                      cfuFrzn: null
+                      mncFrzn: null
+                      viability: null
+                      ccr5: null
+                      attSeg: null
+                      idm:
+                        cmvStatus: null
+                        cmvDate: null
+                        hbsAg: null
+                        antiHbc: null
+                        antiHcv: null
+                        hcvNat: null
+                        antiHiv12: null
+                        hiv1Nat: null
+                        antiHtlv: null
+                        syphilis: null
+                        wnv: null
+                        alt: null
+                      abo: null
+                      alPla: null
+                      alRedBc: null
+                      alSer: null
+                      rhesus: null
+                      ctCompleteDate: null
+                      ctSmplType: null
+                      dnaSmpl: null
+                      donAttr: null
+                      statEndDate: null
+                      statReason: null
+                      FreezeMeth: null
+                      hla:
+                        a:
+                          dna:
+                            field1: '02:01'
+                            field2: '03:XX'
+                          ser:
+                            field1: null
+                            field2: null
+                        b:
+                          dna:
+                            field1: '08:XX'
+                            field2: '08:02'
+                          ser:
+                            field1: null
+                            field2: null
+                        c:
+                          dna:
+                            field1: null
+                            field2: null
+                          ser:
+                            field1: null
+                            field2: null
+                        drb1:
+                          dna:
+                            field1: '03:XX'
+                            field2: '11:XX'
+                          ser:
+                            field1: null
+                            field2: null
+                        drb3:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb4:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb5:
+                          dna:
+                            field1: null
+                            field2: null
+                        dqa1:
+                          dna:
+                            field1: null
+                            field2: null
+                        dqb1:
+                          dna:
+                            field1: null
+                            field2: null
+                          ser:
+                            field1: null
+                            field2: null
+                        dpa1:
+                          dna:
+                            field1: null
+                            field2: null
+                        dpb1:
+                          dna:
+                            field1: null
+                            field2: null
+                      mat:
+                        id: null
+                        idBank: null
+                        alSer: null
+                        serQuant: null
+                        alPla: null
+                        plaQuant: null
+                        idm:
+                          cmvStatus: null
+                          cmvDate: null
+                          hbsAg: null
+                          antiHbc: null
+                          antiHcv: null
+                          hcvNat: null
+                          antiHiv12: null
+                          hiv1Nat: null
+                          antiHtlv: null
+                          syphilis: null
+                          wnv: null
+                          alt: null
+                        hla:
+                          a:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          b:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          c:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          drb1:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          drb3:
+                            dna:
+                              field1: null
+                              field2: null
+                          drb4:
+                            dna:
+                              field1: null
+                              field2: null
+                          drb5:
+                            dna:
+                              field1: null
+                              field2: null
+                          dqa1:
+                            dna:
+                              field1: null
+                              field2: null
+                          dqb1:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          dpa1:
+                            dna:
+                              field1: null
+                              field2: null
+                          dpb1:
+                            dna:
+                              field1: null
+                              field2: null
+                DR:
+                  value:
+                    searchId: 999
+                    searchResultsId: 9999
+                    searchType: DR
+                    matchDTime: '2019-02-12 21:43:27'
+                    registry:
+                      ion: ION-9999
+                      abbr: AA-AAAAA
+                      orgName: Example Organisation Name
+                      orgNameAlt: Alternative Organisation Name
+                      orgType: DR
+                      iso3166: BB
+                      regBmdwCode: BB
+                      regEmdisCode: ''
+                      regAccredStatus: WMDA qualified (D/C)
+                      regAccredCbb: none
+                      visitAddress: 'Example Address 1, floor 1'
+                      visitAddress2: 'Example Address 2, floor 2'
+                      visitZipCode: '99999'
+                      visitCity: Example City
+                      visitState: ''
+                      visitCountry: Example Country
+                      phone: + 99 99 9999 9999
+                      fax: + 99 99 9999 9999
+                      email: email@email.com
+                    patient:
+                      wmdaId: 99999
+                      pId: 99999
+                      status: ACT
+                      hla:
+                        a:
+                          dna:
+                            field1: '01:01'
+                            field2: null
+                        b:
+                          dna:
+                            field1: '07:02'
+                            field2: null
+                        c:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb1:
+                          dna:
+                            field1: '11:01G'
+                            field2: null
+                        dqb1:
+                          dna:
+                            field1: null
+                            field2: null
+                        dpb1:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb3:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb4:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb5:
+                          dna:
+                            field1: null
+                            field2: null
+                        dpa1:
+                          dna:
+                            field1: null
+                            field2: null
+                        dqa1:
+                          dna:
+                            field1: null
+                            field2: null
+                      idm:
+                        cmvStatus: P
+                      birthDate: null
+                      diagnosis:
+                        diag: null
+                        diagText: null
+                        diagDate: '2020-12-02'
+                      disPha: null
+                      ethn: UK
+                      pool: null
+                      grafId: null
+                      abo: A
+                      rhesus: P
+                      weight: null
+                      sex: M
+                      legalTerms: true
+                      urgent: false
+                      comment: null
+                      creationDate: '2018-01-01T11:03:41Z'
+                      lastUpdated: '2019-09-14T13:34:02Z'
+                      lastViewed: '2020-03-16T14:47:20Z'
+                      createdBy: email@email.com
+                      createdVia: web
+                      updatedVia: web
+                    matchData:
+                      id: 999999
+                      grid: null
+                      donSer: 99999999
+                      donorType: D
+                      donPool: 9999
+                      birthDate: '1999-01-22'
+                      status: AV
+                      contactDate: null
+                      sex: M
+                      ethn: null
+                      idm:
+                        cmvStatus: null
+                        cmvDate: null
+                        hbsAg: null
+                        antiHbc: null
+                        antiHcv: null
+                        hcvNat: null
+                        antiHiv12: null
+                        hiv1Nat: null
+                        antiHtlv: null
+                        syphilis: null
+                        wnv: null
+                        alt: null
+                      abo: null
+                      rhesus: null
+                      weight: null
+                      nmbrMarr: null
+                      nmbrPbsc: null
+                      transfusions: null
+                      pregnancies: null
+                      rsvPat: null
+                      statEndDate: null
+                      statReason: null
+                      hla:
+                        a:
+                          dna:
+                            field1: '02:01'
+                            field2: '23:XX'
+                          ser:
+                            field1: null
+                            field2: null
+                        b:
+                          dna:
+                            field1: '08:XX'
+                            field2: null
+                          ser:
+                            field1: null
+                            field2: null
+                        c:
+                          dna:
+                            field1: null
+                            field2: null
+                          ser:
+                            field1: null
+                            field2: null
+                        drb1:
+                          dna:
+                            field1: '11:XX'
+                            field2: null
+                          ser:
+                            field1: null
+                            field2: null
+                        drb3:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb4:
+                          dna:
+                            field1: null
+                            field2: null
+                        drb5:
+                          dna:
+                            field1: null
+                            field2: null
+                        dqa1:
+                          dna:
+                            field1: null
+                            field2: null
+                        dqb1:
+                          dna:
+                            field1: null
+                            field2: null
+                          ser:
+                            field1: null
+                            field2: null
+                        dpa1:
+                          dna:
+                            field1: null
+                            field2: null
+                        dpb1:
+                          dna:
+                            field1: null
+                            field2: null
+                      mat:
+                        id: null
+                        idBank: null
+                        alSer: null
+                        serQuant: null
+                        alPla: null
+                        plaQuant: null
+                        idm:
+                          cmvStatus: null
+                          cmvDate: null
+                          hbsAg: null
+                          antiHbc: null
+                          antiHcv: null
+                          hcvNat: null
+                          antiHiv12: null
+                          hiv1Nat: null
+                          antiHtlv: null
+                          syphilis: null
+                          wnv: null
+                          alt: null
+                        hla:
+                          a:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          b:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          c:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          drb1:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          drb3:
+                            dna:
+                              field1: null
+                              field2: null
+                          drb4:
+                            dna:
+                              field1: null
+                              field2: null
+                          drb5:
+                            dna:
+                              field1: null
+                              field2: null
+                          dqa1:
+                            dna:
+                              field1: null
+                              field2: null
+                          dqb1:
+                            dna:
+                              field1: null
+                              field2: null
+                            ser:
+                              field1: null
+                              field2: null
+                          dpa1:
+                            dna:
+                              field1: null
+                              field2: null
+                          dpb1:
+                            dna:
+                              field1: null
+                              field2: null
+        '400':
+          description: Bad request
+          content:
+            application/json: {}
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              example:
+                error:
+                  message: Unauthenticated.
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                error:
+                  message: Action not allowed.
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              example:
+                error:
+                  message: The requested resource could not be found.
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              example:
+                error:
+                  message: Method not allowed.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    You have made too many requests recently. Please wait and
+                    try your request again later.
+        '500':
+          description: >-
+            API execution of the service failed in some way. Please, contact a
+            WMDA administrator to report the problem.
+          content:
+            application/json:
+              example:
+                error:
+                  message: >-
+                    API execution of the service failed in some way. Please,
+                    contact a WMDA administrator to report the problem.
+        '503':
+          description: Service is down for maintenance
+          content:
+            application/json:
+              example:
+                error:
+                  message: Service is down for maintenance.
+      security:
+        - wsmsOauth2:
+            - ''
+            - ''
+components:
+  schemas:
+    patient:
+      type: object
+      properties:
+        wmdaId:
+          allOf:
+            - $ref: '#/components/schemas/wmdaId'
+        pId:
+          allOf:
+            - $ref: '#/components/schemas/pId'
+        hla:
+          allOf:
+            - $ref: '#/components/schemas/hlaPatientRequest'
+        idm:
+          allOf:
+            - $ref: '#/components/schemas/idmPatient'
+        birthDate:
+          allOf:
+            - $ref: '#/components/schemas/birthDate'
+        diagnosis:
+          allOf:
+            - $ref: '#/components/schemas/diagnosis'
+        disPha:
+          allOf:
+            - $ref: '#/components/schemas/disPha'
+        ethn:
+          allOf:
+            - $ref: '#/components/schemas/ethnPatient'
+        pool:
+          allOf:
+            - $ref: '#/components/schemas/pool'
+        grafId:
+          allOf:
+            - $ref: '#/components/schemas/grafId'
+        abo:
+          allOf:
+            - $ref: '#/components/schemas/abo'
+        rhesus:
+          allOf:
+            - $ref: '#/components/schemas/rhesus'
+        weight:
+          allOf:
+            - $ref: '#/components/schemas/weight'
+        sex:
+          allOf:
+            - $ref: '#/components/schemas/sex'
+        legalTerms:
+          allOf:
+            - $ref: '#/components/schemas/legalTermsRequest'
+        urgent:
+          allOf:
+            - $ref: '#/components/schemas/urgent'
+        comment:
+          allOf:
+            - $ref: '#/components/schemas/comment'
+      required:
+        - hla
+        - ethn
+      additionalProperties: false
+    patientResponse:
+      type: object
+      properties:
+        wmdaId:
+          allOf:
+            - $ref: '#/components/schemas/wmdaId'
+        pId:
+          allOf:
+            - $ref: '#/components/schemas/pId'
+        status:
+          allOf:
+            - $ref: '#/components/schemas/patientStatus'
+        hla:
+          allOf:
+            - $ref: '#/components/schemas/hlaPatientResponse'
+        idm:
+          allOf:
+            - $ref: '#/components/schemas/idmPatient'
+        birthDate:
+          allOf:
+            - $ref: '#/components/schemas/birthDate'
+        diagnosis:
+          allOf:
+            - $ref: '#/components/schemas/diagnosis'
+        disPha:
+          allOf:
+            - $ref: '#/components/schemas/disPha'
+        ethn:
+          allOf:
+            - $ref: '#/components/schemas/ethnPatient'
+        pool:
+          allOf:
+            - $ref: '#/components/schemas/pool'
+        grafId:
+          allOf:
+            - $ref: '#/components/schemas/grafId'
+        abo:
+          allOf:
+            - $ref: '#/components/schemas/abo'
+        rhesus:
+          allOf:
+            - $ref: '#/components/schemas/rhesus'
+        weight:
+          allOf:
+            - $ref: '#/components/schemas/weight'
+        sex:
+          allOf:
+            - $ref: '#/components/schemas/sex'
+        legalTerms:
+          allOf:
+            - $ref: '#/components/schemas/legalTermsRequest'
+        urgent:
+          allOf:
+            - $ref: '#/components/schemas/urgent'
+        comment:
+          allOf:
+            - $ref: '#/components/schemas/comment'
+        createdBy:
+          allOf:
+            - $ref: '#/components/schemas/createdBy'
+        lastUpdated:
+          allOf:
+            - $ref: '#/components/schemas/lastUpdated'
+        lastViewed:
+          allOf:
+            - $ref: '#/components/schemas/lastViewed'
+      required:
+        - wmdaId
+        - pId
+        - status
+        - hla
+        - idm
+        - birthDate
+        - diagnosis
+        - disPha
+        - ethn
+        - pool
+        - grafId
+        - abo
+        - rhesus
+        - weight
+        - sex
+        - legalTerms
+        - urgent
+        - comment
+        - createdBy
+        - lastUpdated
+        - lastViewed
+      additionalProperties: false
+    patientAssignUser:
+      type: object
+      properties:
+        wmdaId:
+          allOf:
+            - $ref: '#/components/schemas/wmdaId'
+        userId:
+          allOf:
+            - $ref: '#/components/schemas/userId'
+      required:
+        - wmdaId
+        - userId
+      additionalProperties: false
+    searchParameters:
+      type: object
+      properties:
+        hlaDifferences:
+          type: object
+          properties:
+            overall:
+                allOf:
+                - $ref: '#/components/schemas/hlaDiffTypesOverall'
+          required:
+          - overall
+          additionalProperties: false
+    summaryJSONResponse:
+      type: object
+      properties:
+        searchResultsId:
+          allOf:
+            - $ref: '#/components/schemas/searchResultsId'
+        matchEngine:
+          allOf:
+            - $ref: '#/components/schemas/matchEngine'
+        searchType:
+          allOf:
+            - $ref: '#/components/schemas/searchType'
+        searchParameters:
+          allOf:
+            - $ref: '#/components/schemas/searchParameters'
+        status:
+          allOf:
+            - $ref: '#/components/schemas/searchStatus'
+        summary:
+          allOf:
+            - $ref: '#/components/schemas/resultsSummary'
+    patientListResponse:
+      type: object
+      properties:
+        paging:
+          type: object
+          properties:
+            limit:
+              type: string
+            offset:
+              type: string
+            totalCount:
+              type: string
+        data:
+          type: object
+          properties:
+            patient:
+              type: array
+              items:
+                type: object
+                properties:
+                  wmdaId:
+                    allOf:
+                      - $ref: '#/components/schemas/wmdaId'
+                  pId:
+                    allOf:
+                      - $ref: '#/components/schemas/pId'
+                  status:
+                    allOf:
+                      - $ref: '#/components/schemas/patientStatus'
+                  birthDate:
+                    allOf:
+                      - $ref: '#/components/schemas/birthDate'
+                  urgent:
+                    allOf:
+                      - $ref: '#/components/schemas/urgent'
+                  ethn:
+                    allOf:
+                      - $ref: '#/components/schemas/ethnPatient'
+                  createdBy:
+                    allOf:
+                      - $ref: '#/components/schemas/createdBy'
+                  lastUpdated:
+                    allOf:
+                      - $ref: '#/components/schemas/lastUpdated'
+                  lastViewed:
+                    allOf:
+                      - $ref: '#/components/schemas/lastViewed'
+                  summary:
+                    type: object
+                    properties:
+                      requests:
+                        type: object
+                        properties:
+                          searchResultsId:
+                            allOf:
+                              - $ref: '#/components/schemas/searchResultsId'
+                          matchEngine:
+                            allOf:
+                              - $ref: '#/components/schemas/matchEngine'
+                          algorithm:
+                            allOf:
+                              - $ref: '#/components/schemas/algorithm'
+                          status:
+                            allOf:
+                              - $ref: '#/components/schemas/searchStatus'
+                          resultsSummary:
+                            allOf:
+                              - $ref: '#/components/schemas/resultsSummary'
+                          creationDate:
+                            allOf:
+                              - $ref: '#/components/schemas/creationDate'
+                          updatedDate:
+                            allOf:
+                              - $ref: '#/components/schemas/lastUpdated'
+    startUpdateSearchResponse:
+      type: object
+      properties:
+        searchId:
+          allOf:
+            - $ref: '#/components/schemas/searchId'
+        patient:
+          allOf:
+            - $ref: '#/components/schemas/patientResponse'
+        requests:
+          allOf:
+            - $ref: '#/components/schemas/searchRequestsResult'
+    searchSummaryResponse:
+      type: object
+      properties:
+        searchId:
+          allOf:
+            - $ref: '#/components/schemas/searchId'
+        patient:
+          allOf:
+            - $ref: '#/components/schemas/patientResponse'
+        requests:
+          allOf:
+            - $ref: '#/components/schemas/summaryJSONResponse'
+    fullReportResponseCB:
+      type: object
+      properties:
+        searchId:
+          allOf:
+            - $ref: '#/components/schemas/searchId'
+        searchResultsId:
+          allOf:
+            - $ref: '#/components/schemas/searchResultsId'
+        searchType:
+          allOf:
+            - $ref: '#/components/schemas/searchTypeCB'
+        matchDTime:
+          allOf:
+            - $ref: '#/components/schemas/matchDTime'
+        registry:
+          allOf:
+            - $ref: '#/components/schemas/registry'
+        patient:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/patientResponse'
+        matchData:
+          type: object
+          properties:
+            id:
+              allOf:
+                - $ref: '#/components/schemas/id'
+            localId:
+              allOf:
+                - $ref: '#/components/schemas/localId'
+            bagId:
+              allOf:
+                - $ref: '#/components/schemas/bagId'
+            donSer:
+              allOf:
+                - $ref: '#/components/schemas/donSer'
+            donorType:
+              allOf:
+                - $ref: '#/components/schemas/donorType'
+            donPool:
+              allOf:
+                - $ref: '#/components/schemas/donPool'
+            birthDate:
+              allOf:
+                - $ref: '#/components/schemas/birthDate'
+            status:
+              allOf:
+                - $ref: '#/components/schemas/donorStatus'
+            sex:
+              allOf:
+                - $ref: '#/components/schemas/sex'
+            ethn:
+              allOf:
+                - $ref: '#/components/schemas/ethnDonor'
+            collDate:
+              allOf:
+                - $ref: '#/components/schemas/collDate'
+            procDate:
+              allOf:
+                - $ref: '#/components/schemas/procDate'
+            procMeth:
+              allOf:
+                - $ref: '#/components/schemas/procMeth'
+            procMethType:
+              allOf:
+                - $ref: '#/components/schemas/procMethType'
+            freezeDate:
+              allOf:
+                - $ref: '#/components/schemas/freezeDate'
+            freezeMeth:
+              allOf:
+                - $ref: '#/components/schemas/freezeMeth'
+            rsvPat:
+              allOf:
+                - $ref: '#/components/schemas/rsvPat'
+            prodMod:
+              allOf:
+                - $ref: '#/components/schemas/prodMod'
+            bagType:
+              allOf:
+                - $ref: '#/components/schemas/bagType'
+            bags:
+              allOf:
+                - $ref: '#/components/schemas/bags'
+            bankDistribIdWmda:
+              allOf:
+                - $ref: '#/components/schemas/bankDistribIdWmda'
+            bankDistribIdEmdis:
+              allOf:
+                - $ref: '#/components/schemas/bankDistribIdEmdis'
+            bankManufIdWmda:
+              allOf:
+                - $ref: '#/components/schemas/bankManufIdWmda'
+            bankManufIdEmdis:
+              allOf:
+                - $ref: '#/components/schemas/bankManufIdEmdis'
+            bactCult:
+              allOf:
+                - $ref: '#/components/schemas/bactCult'
+            fungCult:
+              allOf:
+                - $ref: '#/components/schemas/fungCult'
+            hemoStatus:
+              allOf:
+                - $ref: '#/components/schemas/hemoStatus'
+            viabilityCells:
+              allOf:
+                - $ref: '#/components/schemas/viabilityCells'
+            viabilityMethod:
+              allOf:
+                - $ref: '#/components/schemas/viabilityMethod'
+            viabilityDate:
+              allOf:
+                - $ref: '#/components/schemas/viabilityDate'
+            vol:
+              allOf:
+                - $ref: '#/components/schemas/vol'
+            volFrzn:
+              allOf:
+                - $ref: '#/components/schemas/volFrzn'
+            tnc:
+              allOf:
+                - $ref: '#/components/schemas/tnc'
+            tncFrzn:
+              allOf:
+                - $ref: '#/components/schemas/tncFrzn'
+            cd34pc:
+              allOf:
+                - $ref: '#/components/schemas/cd34pc'
+            cd34pcFrzn:
+              allOf:
+                - $ref: '#/components/schemas/cd34pcFrzn'
+            cfuFrzn:
+              allOf:
+                - $ref: '#/components/schemas/cfuFrzn'
+            mncFrzn:
+              allOf:
+                - $ref: '#/components/schemas/mncFrzn'
+            viability:
+              allOf:
+                - $ref: '#/components/schemas/viability'
+            ccr5:
+              allOf:
+                - $ref: '#/components/schemas/ccr5'
+            attSeg:
+              allOf:
+                - $ref: '#/components/schemas/attSeg'
+            idm:
+              allOf:
+                - $ref: '#/components/schemas/idmFull'
+            kir:
+              allOf:
+                - $ref: '#/components/schemas/kirFull'
+            abo:
+              allOf:
+                - $ref: '#/components/schemas/abo'
+            alPla:
+              allOf:
+                - $ref: '#/components/schemas/alPla'
+            alRedBc:
+              allOf:
+                - $ref: '#/components/schemas/alRedBc'
+            redBcFrzn:
+              allOf:
+                - $ref: '#/components/schemas/redBcFrzn'
+            alSer:
+              allOf:
+                - $ref: '#/components/schemas/alSer'
+            serQuant:
+              allOf:
+                - $ref: '#/components/schemas/serQuant'
+            plaQuant:
+              allOf:
+                - $ref: '#/components/schemas/plaQuant'
+            rhesus:
+              allOf:
+                - $ref: '#/components/schemas/rhesus'
+            ctCompleteDate:
+              allOf:
+                - $ref: '#/components/schemas/ctCompleteDate'
+            ctSmplType:
+              allOf:
+                - $ref: '#/components/schemas/ctSmplType'
+            dnaSmpl:
+              allOf:
+                - $ref: '#/components/schemas/dnaSmpl'
+            othSmpl:
+              allOf:
+                - $ref: '#/components/schemas/othSmpl'
+            donAttr:
+              allOf:
+                - $ref: '#/components/schemas/donAttr'
+            statEndDate:
+              allOf:
+                - $ref: '#/components/schemas/statEndDate'
+            statReason:
+              allOf:
+                - $ref: '#/components/schemas/statReason'
+            hla:
+              allOf:
+                - $ref: '#/components/schemas/hlaDonor'
+            mat:
+              allOf:
+                - $ref: '#/components/schemas/mat'
+    fullReportResponseDR:
+      type: object
+      properties:
+        searchId:
+          allOf:
+            - $ref: '#/components/schemas/searchId'
+        searchResultsId:
+          allOf:
+            - $ref: '#/components/schemas/searchResultsId'
+        searchType:
+          allOf:
+            - $ref: '#/components/schemas/searchTypeDR'
+        matchDTime:
+          allOf:
+            - $ref: '#/components/schemas/matchDTime'
+        registry:
+          allOf:
+            - $ref: '#/components/schemas/registry'
+        patient:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/patientResponse'
+        matchData:
+          type: object
+          properties:
+            id:
+              allOf:
+                - $ref: '#/components/schemas/id'
+            grid:
+              allOf:
+                - $ref: '#/components/schemas/grid'
+            donSer:
+              allOf:
+                - $ref: '#/components/schemas/donSer'
+            donorType:
+              allOf:
+                - $ref: '#/components/schemas/donorTypeDR'
+            donPool:
+              allOf:
+                - $ref: '#/components/schemas/donPool'
+            birthDate:
+              allOf:
+                - $ref: '#/components/schemas/birthDate'
+            status:
+              allOf:
+                - $ref: '#/components/schemas/donorStatus'
+            contactDate:
+              allOf:
+                - $ref: '#/components/schemas/contactDate'
+            sex:
+              allOf:
+                - $ref: '#/components/schemas/sex'
+            ethn:
+              allOf:
+                - $ref: '#/components/schemas/ethnDonor'
+            idm:
+              allOf:
+                - $ref: '#/components/schemas/idmFull'
+            kir:
+              allOf:
+                - $ref: '#/components/schemas/kirFull'
+            abo:
+              allOf:
+                - $ref: '#/components/schemas/abo'
+            rhesus:
+              allOf:
+                - $ref: '#/components/schemas/rhesus'
+            weight:
+              allOf:
+                - $ref: '#/components/schemas/weight'
+            nmbrMarr:
+              allOf:
+                - $ref: '#/components/schemas/nmbrMarr'
+            nmbrPbsc:
+              allOf:
+                - $ref: '#/components/schemas/nmbrPbsc'
+            transfusions:
+              allOf:
+                - $ref: '#/components/schemas/nmbrTrans'
+            pregnancies:
+              allOf:
+                - $ref: '#/components/schemas/nmbrPreg'
+            rsvPat:
+              allOf:
+                - $ref: '#/components/schemas/rsvPat'
+            statEndDate:
+              allOf:
+                - $ref: '#/components/schemas/statEndDate'
+            statReason:
+              allOf:
+                - $ref: '#/components/schemas/statReason'
+            hla:
+              allOf:
+                - $ref: '#/components/schemas/hlaDonor'
+    searchResultsResponseHapeCB:
+      type: object
+      properties:
+        searchId:
+          allOf:
+            - $ref: '#/components/schemas/searchId'
+        matchDTime:
+          allOf:
+            - $ref: '#/components/schemas/matchDTime'
+        matchEngine:
+          allOf:
+            - $ref: '#/components/schemas/matchEngine'
+        searchType:
+          allOf:
+            - $ref: '#/components/schemas/searchTypeCB'
+        searchParameters:
+          allOf:
+            - $ref: '#/components/schemas/searchParameters'
+        status:
+          allOf:
+            - $ref: '#/components/schemas/searchStatus'
+        summary:
+          allOf:
+            - $ref: '#/components/schemas/resultsSummary'
+        inexp:
+          allOf:
+            - $ref: '#/components/schemas/inexpTotal'
+        total:
+          allOf:
+            - $ref: '#/components/schemas/total'
+        statistics:
+          allOf:
+            - $ref: '#/components/schemas/statistics'
+        patient:
+          allOf:
+            - $ref: '#/components/schemas/patient'
+        donors:
+          allOf:
+            - $ref: '#/components/schemas/donorCB'
+    searchResultsResponseHapeDR:
+      type: object
+      properties:
+        searchId:
+          allOf:
+            - $ref: '#/components/schemas/searchId'
+        searchType:
+          allOf:
+            - $ref: '#/components/schemas/searchTypeDR'
+        matchDTime:
+          allOf:
+            - $ref: '#/components/schemas/matchDTime'
+        matchEngine:
+          allOf:
+            - $ref: '#/components/schemas/matchEngine'
+        searchParameters:
+          allOf:
+            - $ref: '#/components/schemas/searchParameters'
+        status:
+          allOf:
+            - $ref: '#/components/schemas/searchStatus'
+        summary:
+          allOf:
+            - $ref: '#/components/schemas/resultsSummary'
+        inexp:
+          allOf:
+            - $ref: '#/components/schemas/inexpTotal'
+        total:
+          allOf:
+            - $ref: '#/components/schemas/total'
+        statistics:
+          allOf:
+            - $ref: '#/components/schemas/statistics'
+        patient:
+          allOf:
+            - $ref: '#/components/schemas/patient'
+        donors:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/donorDR'
+      required:
+        - searchId
+        - searchResultsId
+        - matchDTime
+        - matchEngine
+        - searchType
+        - searchParameters
+        - patient
+        - status
+        - summary
+        - donors
+        - inexp
+        - total
+        - statistics
+    donorCB:
+      type: object
+      properties:
+        id:
+          allOf:
+            - $ref: '#/components/schemas/id'
+        donSer:
+          allOf:
+            - $ref: '#/components/schemas/donSer'
+        donorType:
+          allOf:
+            - $ref: '#/components/schemas/donorTypeCB'
+        donPool:
+          allOf:
+            - $ref: '#/components/schemas/donPool'
+        birthDate:
+          allOf:
+            - $ref: '#/components/schemas/birthDate'
+        status:
+          allOf:
+            - $ref: '#/components/schemas/donorStatus'
+        sex:
+          allOf:
+            - $ref: '#/components/schemas/sex'
+        ethn:
+          allOf:
+            - $ref: '#/components/schemas/ethnDonor'
+        vol:
+          allOf:
+            - $ref: '#/components/schemas/vol'
+        volFrzn:
+          allOf:
+            - $ref: '#/components/schemas/volFrzn'
+        tnc:
+          allOf:
+            - $ref: '#/components/schemas/tnc'
+        tncFrzn:
+          allOf:
+            - $ref: '#/components/schemas/tncFrzn'
+        cd34pc:
+          allOf:
+            - $ref: '#/components/schemas/cd34pc'
+        cd34pcFrzn:
+          allOf:
+            - $ref: '#/components/schemas/cd34pcFrzn'
+        mncFrzn:
+          allOf:
+            - $ref: '#/components/schemas/mncFrzn'
+        viability:
+          allOf:
+            - $ref: '#/components/schemas/viability'
+        ccr5:
+          allOf:
+            - $ref: '#/components/schemas/ccr5'
+        attSeg:
+          allOf:
+            - $ref: '#/components/schemas/attSeg'
+        idm:
+          allOf:
+            - $ref: '#/components/schemas/idmResults'
+        abo:
+          allOf:
+            - $ref: '#/components/schemas/abo'
+        rhesus:
+          allOf:
+            - $ref: '#/components/schemas/rhesus'
+        bankManufIdWmda:
+          allOf:
+            - $ref: '#/components/schemas/bankManufIdWmda'
+        regAccredStatus:
+          allOf:
+            - $ref: '#/components/schemas/regAccredStatus'
+        regAccredCbb:
+          allOf:
+            - $ref: '#/components/schemas/regAccredCbb'
+        hla:
+          allOf:
+            - $ref: '#/components/schemas/hlaDonor'
+        matchClass:
+          allOf:
+            - $ref: '#/components/schemas/matchClass'
+        matchGrade:
+          allOf:
+            - $ref: '#/components/schemas/matchGrade'
+        nmdpGrade:
+          allOf:
+            - $ref: '#/components/schemas/nmdpGrade'
+        p0:
+          allOf:
+            - $ref: '#/components/schemas/p0'
+        p1:
+          allOf:
+            - $ref: '#/components/schemas/p1'
+        p2:
+          allOf:
+            - $ref: '#/components/schemas/p2'
+        pa:
+          allOf:
+            - $ref: '#/components/schemas/pa'
+        pb:
+          allOf:
+            - $ref: '#/components/schemas/pb'
+        pc:
+          allOf:
+            - $ref: '#/components/schemas/pc'
+        pdr:
+          allOf:
+            - $ref: '#/components/schemas/pdr'
+        pdq:
+          allOf:
+            - $ref: '#/components/schemas/pdq'
+        diffString:
+          allOf:
+            - $ref: '#/components/schemas/diffString'
+        inexp:
+          allOf:
+            - $ref: '#/components/schemas/inexp'
+        dpb1grade:
+          allOf:
+            - $ref: '#/components/schemas/dpb1grade'
+        tceDigest:
+          allOf:
+            - $ref: '#/components/schemas/tceDigest'
+        mismatches:
+          allOf:
+            - $ref: '#/components/schemas/mismatchedLoci'
+      required:
+        - id
+        - donSer
+        - donorType
+        - donPool
+        - haplosetId
+        - birthDate
+        - status
+        - sex
+        - ethn
+        - ccr5
+        - abo
+        - rhesus
+        - regAccredStatus
+        - regAccredCbb
+        - idm
+        - vol
+        - volFrzn
+        - tnc
+        - tncFrzn
+        - mncFrzn
+        - cd34pc
+        - cd34pcFrzn
+        - viability
+        - attSeg
+        - bankManufIdWmda
+        - hla
+        - matchClass
+        - nmdpGrade
+        - matchGrade
+        - diffString
+        - inexp
+        - p0
+        - p1
+        - p2
+        - pa
+        - pb
+        - pc
+        - pdr
+        - pdq
+        - mismatches
+        - dpb1grade
+        - tceDigest
+    donorDR:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        grid:
+          allOf:
+            - $ref: '#/components/schemas/grid'
+        donSer:
+          allOf:
+            - $ref: '#/components/schemas/donSer'
+        donorType:
+          allOf:
+            - $ref: '#/components/schemas/donorTypeDR'
+        donPool:
+          allOf:
+            - $ref: '#/components/schemas/donPool'
+        haplosetId:
+          allOf:
+            - $ref: '#/components/schemas/haplosetId'
+        birthDate:
+          allOf:
+            - $ref: '#/components/schemas/birthDate'
+        status:
+          allOf:
+            - $ref: '#/components/schemas/donorStatus'
+        contactDate:
+          allOf:
+            - $ref: '#/components/schemas/contactDate'
+        sex:
+          allOf:
+            - $ref: '#/components/schemas/sex'
+        ethn:
+          allOf:
+            - $ref: '#/components/schemas/ethnDonor'
+        ccr5:
+          allOf:
+            - $ref: '#/components/schemas/ccr5'
+        idm:
+          allOf:
+            - $ref: '#/components/schemas/idmResults'
+        abo:
+          allOf:
+            - $ref: '#/components/schemas/abo'
+        rhesus:
+          allOf:
+            - $ref: '#/components/schemas/rhesus'
+        regAccredStatus:
+          allOf:
+            - $ref: '#/components/schemas/regAccredStatus'
+        nmbrMarr:
+          allOf:
+            - $ref: '#/components/schemas/nmbrMarr'
+        nmbrPbsc:
+          allOf:
+            - $ref: '#/components/schemas/nmbrPbsc'
+        hla:
+          allOf:
+            - $ref: '#/components/schemas/hlaDonor'
+        matchClass:
+          allOf:
+            - $ref: '#/components/schemas/matchClass'
+        matchGrade:
+          allOf:
+            - $ref: '#/components/schemas/matchGrade'
+        nmdpGrade:
+          allOf:
+            - $ref: '#/components/schemas/nmdpGrade'
+        p0:
+          allOf:
+            - $ref: '#/components/schemas/p0'
+        p1:
+          allOf:
+            - $ref: '#/components/schemas/p1'
+        p2:
+          allOf:
+            - $ref: '#/components/schemas/p2'
+        pa:
+          allOf:
+            - $ref: '#/components/schemas/pa'
+        pb:
+          allOf:
+            - $ref: '#/components/schemas/pb'
+        pc:
+          allOf:
+            - $ref: '#/components/schemas/pc'
+        pdr:
+          allOf:
+            - $ref: '#/components/schemas/pdr'
+        pdq:
+          allOf:
+            - $ref: '#/components/schemas/pdq'
+        diffString:
+          allOf:
+            - $ref: '#/components/schemas/diffString'
+        inexp:
+          allOf:
+            - $ref: '#/components/schemas/inexp'
+        dpb1grade:
+          allOf:
+            - $ref: '#/components/schemas/dpb1grade'
+        tceDigest:
+          allOf:
+            - $ref: '#/components/schemas/tceDigest'
+        mismatches:
+          allOf:
+            - $ref: '#/components/schemas/mismatchedLoci'
+    ethnDonor:
+      type: string
+      nullable: true
+      enum:
+        - UK
+        - AF
+        - AS
+        - CA
+        - HI
+        - AFNA
+        - AFSS
+        - ASSW
+        - ASSO
+        - ASCE
+        - ASSE
+        - ASNE
+        - ASOC
+        - CAEU
+        - CAER
+        - CANA
+        - CAAU
+        - HICA
+        - HISA
+        - MX
+        - OT
+    ethnPatient:
+      type: string
+      nullable: false
+      enum:
+        - UK
+        - AF
+        - AS
+        - CA
+        - HI
+        - AFNA
+        - AFSS
+        - ASSW
+        - ASSO
+        - ASCE
+        - ASSE
+        - ASNE
+        - ASOC
+        - CAEU
+        - CAER
+        - CANA
+        - CAAU
+        - HICA
+        - HISA
+        - MX
+        - OT
+    idmResults:
+      type: object
+      properties:
+        antiCmv:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - G
+            - M
+            - B
+            - H
+            - O
+            - 'N'
+        antiCmvDate:
+          type: string
+          nullable: true
+          maxLength: 10
+          description: date of CMV NAT test
+        CmvNat:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+        CmvNatDate:
+          type: string
+          nullable: true
+          maxLength: 10
+          description: date of CMV NAT test
+    idmFull:
+      type: object
+      properties:
+        antiCmv:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - G
+            - M
+            - B
+            - H
+            - O
+            - 'N'
+          description: CMV status (antibody based). P = Positive N = Negative
+        antiCmvDate:
+          type: string
+          nullable: true
+          maxLength: 10
+          description: Date of antibody test to CMV. P = Positive N = Negative
+        cmvNat:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: CMV NAT status. P = Positive N = Negative
+        cmvNatDate:
+          type: string
+          nullable: true
+          maxLength: 10
+          description: Date of NAT test for CMV. P = Positive N = Negative
+        hbsAg:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: >-
+            Hepatitis B status (hepatitis B surface antigen). P = Positive N =
+            Negative
+        antiHbc:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: Hepatitis B status (antibody to hepatitis B core antigen)
+        antiHbs:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: Hepatitis B status (antibody to hepatitis B surface antigen)
+        antiHcv:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: Hepatitis C status (antibody to hepatitis C virus)
+        antiHiv12:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: Anti-HIV 1/2 status
+        hiv1Nat:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: HIV-1 NAT status
+        antiHtlv:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: Antibody to HTLV I/II
+        chagas:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: Chagas status
+        ebv:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: EBV status
+        hbvNat:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: HBV NAT status
+        hcvNat:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: HCV NAT status
+        hivp24:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: HIV p24 status
+        pb19Nat:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: ParvoB19 NAT status
+        syphilis:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: Syphilis status
+        toxo:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: Toxoplasmosis status
+        wnv:
+          type: string
+          nullable: true
+          enum:
+            - P
+            - 'N'
+          description: WNV status
+        alt:
+          type: integer
+          nullable: true
+          minimum: 1
+          description: Alanine aminotransferase status in units per litre
+    donorDnaSerLocus:
+      type: object
+      properties:
+        dna:
+          type: object
+          properties:
+            field1:
+              type: string
+              nullable: true
+            field2:
+              type: string
+              nullable: true
+          required:
+            - field1
+            - field2
+          additionalProperties: false
+        ser:
+          type: object
+          properties:
+            field1:
+              type: string
+              nullable: true
+            field2:
+              type: string
+              nullable: true
+          required:
+            - field1
+            - field2
+          additionalProperties: false
+      required:
+        - dna
+        - ser
+      additionalProperties: false
+    donorDnaLocus:
+      type: object
+      properties:
+        dna:
+          type: object
+          properties:
+            field1:
+              type: string
+              nullable: true
+              maxLength: 20
+            field2:
+              type: string
+              nullable: true
+              maxLength: 20
+          required:
+            - field1
+            - field2
+          additionalProperties: false
+      required:
+        - dna
+      additionalProperties: false
+    hlaDonor:
+      type: object
+      properties:
+        a:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaSerLocus'
+        b:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaSerLocus'
+        c:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaSerLocus'
+        dpa1:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaLocus'
+        dpb1:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaLocus'
+        dqa1:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaLocus'
+        dqb1:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaSerLocus'
+        drb1:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaSerLocus'
+        drb3:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaLocus'
+        drb4:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaLocus'
+        drb5:
+          allOf:
+            - $ref: '#/components/schemas/donorDnaLocus'
+      required:
+        - a
+        - b
+        - c
+        - dpa1
+        - dpb1
+        - dqa1
+        - dqb1
+        - drb1
+        - drb3
+        - drb4
+        - drb5
+      additionalProperties: false
+    requiredlocus:
+      type: object
+      properties:
+        dna:
+          type: object
+          properties:
+            field1:
+              type: string
+              maxLength: 20
+            field2:
+              type: string
+              nullable: true
+              maxLength: 20
+          required:
+            - field1
+            - field2
+          additionalProperties: false
+      required:
+        - dna
+      additionalProperties: false
+    notrequiredlocus:
+      type: object
+      properties:
+        dna:
+          type: object
+          properties:
+            field1:
+              type: string
+              nullable: true
+              maxLength: 20
+            field2:
+              type: string
+              nullable: true
+              maxLength: 20
+          required:
+            - field1
+            - field2
+          additionalProperties: false
+      required:
+        - dna
+      additionalProperties: false
+    hlaPatientRequest:
+      type: object
+      properties:
+        a:
+          allOf:
+            - $ref: '#/components/schemas/requiredlocus'
+        b:
+          allOf:
+            - $ref: '#/components/schemas/requiredlocus'
+        c:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        dpa1:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        dpb1:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        dqa1:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        dqb1:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        drb1:
+          allOf:
+            - $ref: '#/components/schemas/requiredlocus'
+        drb3:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        drb4:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        drb5:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+      required:
+        - a
+        - b
+        - drb1
+      additionalProperties: false
+    hlaPatientResponse:
+      type: object
+      properties:
+        a:
+          allOf:
+            - $ref: '#/components/schemas/requiredlocus'
+        b:
+          allOf:
+            - $ref: '#/components/schemas/requiredlocus'
+        c:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        dpa1:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        dpb1:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        dqa1:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        dqb1:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        drb1:
+          allOf:
+            - $ref: '#/components/schemas/requiredlocus'
+        drb3:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        drb4:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+        drb5:
+          allOf:
+            - $ref: '#/components/schemas/notrequiredlocus'
+      required:
+        - a
+        - b
+        - c
+        - dpa1
+        - dpb1
+        - dqa1
+        - dqb1
+        - drb1
+        - drb3
+        - drb4
+        - drb5
+      additionalProperties: false
+    registry:
+      type: object
+      properties:
+        ion:
+          type: string
+        abbr:
+          type: string
+        orgName:
+          type: string
+        orgNameAlt:
+          type: string
+          nullable: true
+        orgType:
+          type: string
+        iso3166:
+          type: string
+        regAccredStatus:
+          allOf:
+            - $ref: '#/components/schemas/regAccredStatus'
+        regAccredCbb:
+          allOf:
+            - $ref: '#/components/schemas/regAccredCbb'
+        visitAddress:
+          type: string
+        visitAddress2:
+          type: string
+          nullable: true
+        visitZipCode:
+          type: string
+        visitCity:
+          type: string
+        visitState:
+          type: string
+        visitCountry:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        fax:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+    kirGenePresence:
+      type: string
+      enum:
+        - POS
+        - NEG
+      nullable: true
+      description: POS = presence of KIR gene; NEG = absence of KIR gene
+    kirFull:
+      type: object
+      properties:
+        kir2Dl1:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Dl2:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Dl3:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Dl4:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Dl5a:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Dl5b:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Dp1:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Ds1:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Ds2:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Ds3:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Ds4:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir2Ds5:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir3Dl1:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir3Dl2:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir3Dl3:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir3Dp1:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+        kir3Ds1:
+          allOf:
+            - $ref: '#/components/schemas/kirGenePresence'
+    mat:
+      type: object
+      properties:
+        id:
+          allOf:
+            - $ref: '#/components/schemas/id'
+        idBank:
+          allOf:
+            - $ref: '#/components/schemas/idBank'
+        alSer:
+          allOf:
+            - $ref: '#/components/schemas/alSer'
+        serQuant:
+          allOf:
+            - $ref: '#/components/schemas/serQuant'
+        alPla:
+          allOf:
+            - $ref: '#/components/schemas/alPla'
+        plaQuant:
+          allOf:
+            - $ref: '#/components/schemas/plaQuant'
+        idm:
+          allOf:
+            - $ref: '#/components/schemas/idmFull'
+        hla:
+          allOf:
+            - $ref: '#/components/schemas/hlaDonor'
+    hlaDiffTypesOverall:
+      type: integer
+      default: 0
+      enum:
+        - 0
+        - 1
+        - 2
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+    abo:
+      type: string
+      nullable: true
+      enum:
+        - A
+        - B
+        - O
+        - AB
+    rhesus:
+      type: string
+      nullable: true
+      enum:
+        - P
+        - 'N'
+    weight:
+      type: integer
+      nullable: true
+      minimum: 1
+      maximum: 999
+    sex:
+      type: string
+      nullable: true
+      enum:
+        - M
+        - F
+    donPool:
+      type: integer
+      minimum: 1000
+      maximum: 9999
+    id:
+      type: string
+      nullable: true
+    grid:
+      type: string
+      nullable: true
+    donSer:
+      type: string
+      nullable: true
+      description: >-
+        Unique identifier of a donor within the search results. This is not the
+        GRID because the GRID has not been implemented 100%.
+    donorType:
+      type: string
+      enum:
+        - C
+        - D
+    donorTypeDR:
+      type: string
+      enum:
+        - D
+    donorTypeCB:
+      type: string
+      enum:
+        - C
+    patientStatus:
+      type: string
+      enum:
+        - NEW
+        - PRE
+        - ACT
+        - SUS
+        - STP
+    donorStatus:
+      type: string
+      nullable: false
+      enum:
+        - AV
+        - TU
+        - RS
+    localId:
+      type: string
+    bagId:
+      type: string
+    searchTypeCB:
+      type: string
+      enum:
+        - CB
+    searchTypeDR:
+      type: string
+      enum:
+        - DR
+    searchType:
+      type: string
+      enum:
+        - CB
+        - DR
+    vol:
+      type: integer
+    volFrzn:
+      type: integer
+    tnc:
+      type: number
+    tncFrzn:
+      type: number
+    cd34pc:
+      type: number
+    cd34pcFrzn:
+      type: number
+    mncFrzn:
+      type: number
+    viability:
+      type: integer
+      minimum: 0
+      maximum: 100
+    idmPatient:
+      type: object
+      properties:
+        cmvStatus:
+          type: string
+          nullable: true
+          enum:
+            - 'N'
+            - P
+      required:
+        - cmvStatus
+      additionalProperties: false
+    birthDate:
+      type: string
+      nullable: true
+      maxLength: 10
+    diagnosis:
+      type: object
+      properties:
+        diag:
+          type: string
+          enum:
+            - ALL
+            - AML
+            - CML
+            - HIS
+            - HL
+            - IEA
+            - IIS
+            - IMD
+            - IPA
+            - MDS
+            - NHL
+            - OL
+            - OM
+            - OND
+            - PCD
+            - SAA
+          nullable: true
+        diagText:
+          type: string
+          maxLength: 50
+          nullable: true
+        diagDate:
+          type: string
+          nullable: true
+      required:
+        - diag
+        - diagText
+        - diagDate
+      additionalProperties: false
+    idBank:
+      type: string
+    disPha:
+      type: string
+      enum:
+        - PF
+        - PI
+        - AP
+        - BC
+        - AD
+        - SD
+        - RD
+        - NA
+        - C0
+        - C1
+        - C2
+        - C3
+        - C4
+        - C5
+        - C6
+        - C7
+        - C8
+        - C9
+        - P0
+        - P1
+        - P2
+        - P3
+        - P4
+        - P5
+        - P6
+        - P7
+        - P8
+        - P9
+        - R0
+        - R1
+        - R2
+        - R3
+        - R4
+        - R5
+        - R6
+        - R7
+        - R8
+        - R9
+        - N0
+        - N1
+        - N2
+        - N3
+        - N4
+        - N5
+        - N6
+        - N7
+        - N8
+        - N9
+      nullable: true
+    pool:
+      description: ISO 3166-2 Country Code (capitalized)
+      type: string
+      maxLength: 2
+      pattern: '^[A-Z]{2}'
+      nullable: true
+    grafId:
+      type: string
+      maxLength: 10
+      nullable: true
+    wmdaId:
+      type: integer
+    userId:
+      type: string
+      format: GUID
+      minLength: 36
+      maxLength: 36
+      description: unique ID of the user
+    userName:
+      type: string
+      description: username (e-mail address) of the user
+    nmbrMarr:
+      type: integer
+      nullable: true
+    nmbrPbsc:
+      type: integer
+      nullable: true
+    nmbrTrans:
+      type: integer
+      nullable: true
+    nmbrPreg:
+      type: integer
+      nullable: true
+    contactDate:
+      type: string
+      nullable: true
+      minLength: 10
+      maxLength: 10
+    collDate:
+      type: string
+      minLength: 10
+      maxLength: 10
+      nullable: true
+    procDate:
+      type: string
+      minLength: 10
+      maxLength: 10
+      nullable: true
+    procMeth:
+      type: string
+      enum:
+        - HES
+        - DGS
+        - CEN
+        - FIL
+        - FIC
+        - PER
+        - OTH
+      description: >-
+        HES = Hydroxy-Ethyl-Starch, DGS = Density Gradient Separation, CEN =
+        Centrifuge, FIL = Filtration, FIC = FICOL, PER = PERCOL, OTH = Other
+    procMethType:
+      type: string
+    freezeDate:
+      type: string
+    freezeMeth:
+      type: string
+    rsvPat:
+      type: string
+    prodMod:
+      type: string
+    bagType:
+      type: string
+    bags:
+      type: string
+    bankDistribIdWmda:
+      type: integer
+    bankDistribIdEmdis:
+      type: string
+    bankManufIdWmda:
+      type: integer
+    bankManufIdEmdis:
+      type: string
+    bactCult:
+      type: string
+    fungCult:
+      type: string
+    hemoStatus:
+      type: string
+    viabilityCells:
+      type: string
+    viabilityMethod:
+      type: string
+    viabilityDate:
+      type: string
+    cfuFrzn:
+      type: string
+    ccr5:
+      type: string
+      nullable: true
+      enum:
+        - DD
+        - DW
+        - WW
+    attSeg:
+      type: integer
+      nullable: true
+      minimum: 0
+      maximum: 99
+    regAccredStatus:
+      type: string
+      nullable: true
+      enum:
+        - WMDA accredited (D/C)
+        - WMDA accredited (D)
+        - WMDA accredited (C)
+        - WMDA qualified (D/C)
+        - WMDA qualified (D)
+        - WMDA qualified (C)
+        - none
+    regAccredCbb:
+      type: string
+      enum:
+        - FACT
+        - FACT and AABB
+        - AABB
+        - none
+        - ''
+        - null
+      nullable: true
+    legalTermsRequest:
+      type: boolean
+      nullable: true
+      default: false
+      description: If not set to true, then pId and comment will not be stored and wmdaId will be used for pId. 
+    urgent:
+      type: boolean
+      nullable: true
+    comment:
+      type: string
+      maxLength: 255
+      default: null
+      description: Place where comments on this patient can be stored. Entries or changes will be set to null unless "legalTerms" is set to "true". Do not use real names or other directly identifiable information in the comments.  
+    pId:
+      type: string
+      default: same as wmdaId
+      maxLength: 17
+      nullable: true
+      description: Organisation unique identifier for patient. Will be set to wmdaId unless "legalTerms" is set to "true". Do not use real names here. 
+    matchEngine:
+      type: integer
+      enum:
+        - 2
+        - 3
+      description: >-
+        Unique identifier of match engine used in the search. Allowed: 2 (HAP-E), 3 (ATLAS).
+    statEndDate:
+      type: string
+      maxLength: 10
+    statReason:
+      type: string
+      enum:
+        - DO
+        - DD
+        - MR
+        - PR
+        - TX
+        - MO
+        - UC
+        - OT
+        - TQ
+        - UK
+      description: >-
+        DO = Donor is too old, DD = Donor died, MR = Medical reasons, PR =
+        Personal reasons, TX = After transplantation, MO = Donor has moved, UC =
+        Unable to contact donor, OT = Other reasons, TQ = Typing questionable,
+        UK = Unknown
+    algorithm:
+      type: string
+      enum:
+        - H
+        - F
+      default: H
+      description: >-
+        Optional parameter. Haplotype frequencies (H) or Allele frequencies (F)
+        algorithm. Only relevant for matching engine 1 (Optimatch). This
+        determine which method is used to calculate probabilities of match.
+        Haplotypes frequencies is the default in the GUI and takes linkage
+        information into account and provides the most accurate match
+        probabilities.
+    resultsSummary:
+      type: string
+      maxLength: 255
+    searchResultsId:
+      type: integer
+    createdBy:
+      type: string
+      maxLength: 255
+    lastUpdated:
+      type: string
+      maxLength: 255
+    lastViewed:
+      type: string
+      maxLength: 255
+    searchStatus:
+      type: string
+      enum:
+        - Complete
+        - Pending
+        - Error
+    creationDate:
+      type: string
+      maxLength: 10
+    searchId:
+      type: integer
+    matchDTime:
+      type: string
+      minLength: 20
+      maxLength: 20
+    alPla:
+      type: integer
+      minimum: 0
+      maximum: 99
+    alRedBc:
+      type: integer
+      minimum: 0
+      maximum: 99
+    redBcFrzn:
+      type: integer
+      minimum: 0
+      maximum: 9999000000
+    alSer:
+      type: integer
+      minimum: 0
+      maximum: 99
+    serQuant:
+      type: number
+      minimum: 0
+      maximum: 99.9
+    plaQuant:
+      type: number
+      minimum: 0
+      maximum: 99.9
+    ctCompleteDate:
+      type: string
+      maxLength: 10
+    ctSmplType:
+      type: string
+      maxLength: 2
+      enum:
+        - AS
+        - WB
+        - RC
+        - FP
+        - ED
+      description: >-
+        AS = CBU Contiguous Attached Segment, WB = Whole Blood Sample, RC = Red
+        Cell Fraction (pellet), FP = Blood Spotted Filter Paper, ED = Extracted
+        DNA
+    dnaSmpl:
+      type: boolean
+    othSmpl:
+      type: boolean
+    donAttr:
+      type: string
+      maxLength: 3
+    optimasSettings:
+      type: string
+      minLength: 60
+      maxLength: 60
+    matchClass:
+      type: string
+    matchGrade:
+      type: string
+    nmdpGrade:
+      type: string
+      maxLength: 5
+      description: 'A - high-res match on ARD, P - probable match, M - sure Mismatch'
+    p0:
+      type: integer
+      minimum: 0
+      maximum: 100
+    p1:
+      type: integer
+      minimum: 0
+      maximum: 100
+    p2:
+      type: integer
+      minimum: 0
+      maximum: 100
+    pa:
+      type: string
+      minimum: 0
+      maximum: 100
+    pb:
+      type: string
+      minimum: 0
+      maximum: 100
+    pc:
+      type: string
+      minimum: 0
+      maximum: 100
+    pdr:
+      type: string
+      minimum: 0
+      maximum: 100
+    pdq:
+      type: string
+      minimum: 0
+      maximum: 100
+    diffString:
+      type: string
+      maxLength: 10
+      nullable: true
+    inexp:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+    inexpTotal:
+      type: integer
+      description: >-
+        Total number of donors which phenotype cannot be explained by known
+        haplotype
+    total:
+      type: integer
+      description: Total number of donors in the search results
+    dpb1grade:
+      type: string
+      nullable: true
+      enum:
+        - M
+        - P
+        - G
+        - H
+        - A
+        - U
+    statistics:
+      type: object
+      properties:
+        donors0mm:
+          type: integer
+          description: number of donors in search results with 0 mismatches
+        donors1mm:
+          type: integer
+          description: number of donors in search results with 1 mismatch
+        donors2mm:
+          type: integer
+          description: number of donors in search results with 2 mismatches
+    mismatchedLoci:
+      type: object
+      properties:
+        locus:
+          type: string
+          description: locus where the mismatch is
+        position:
+          type: integer
+          enum:
+            - 1
+            - 2
+          description: position of the mismatch (chromosome 1 or 2)
+        type:
+          type: string
+          enum:
+            - antigen
+            - allele
+          description: type of mismatch
+    searchRequest:
+          type: object
+          required:
+            - wmdaId
+            - matchEngine
+            - searchType
+            - searchParameters
+          properties:
+            wmdaId: 
+              allOf:
+                - $ref: '#/components/schemas/wmdaId'
+            matchEngine:
+              allOf:
+                - $ref: '#/components/schemas/matchEngine'
+            searchType:
+              allOf:
+                - $ref: '#/components/schemas/searchType'
+            overallMismatches:
+              allOf:
+                - $ref: '#/components/schemas/hlaDiffTypesOverall'
+    searchRequestsResult:
+          type: array
+          items:
+            type: object
+            required:
+              - searchResultsId
+              - matchEngine
+              - searchType
+              - searchParameters
+            properties:
+              searchResultsId: 
+                allOf: 
+                  - $ref: '#/components/schemas/searchResultsId'
+              matchEngine:
+                allOf:
+                  - $ref: '#/components/schemas/matchEngine'
+              searchType:
+                allOf:
+                  - $ref: '#/components/schemas/searchType'
+              searchParameters:
+                allOf:
+                - $ref: '#/components/schemas/searchParameters'
+    haplosetId:
+      type: integer
+    tceDigest:
+      type: object
+      properties:
+        countPer:
+          type: integer
+          nullable: true
+          description: number of ambiguous allel combinations for permissive MM
+        countNph:
+          type: integer
+          nullable: true
+          description: number of ambiguous allel combinations for non-permissive MM in HvG
+        countNpg:
+          type: integer
+          nullable: true
+          description: number of ambiguous allel combinations for non-permissive MM in GvH
+        countNd:
+          type: integer
+          nullable: true
+          description: >-
+            number of ambiguous allel combinations for which it cannot be
+            determined whether it is permissive or not
+        probPer:
+          type: integer
+          nullable: true
+          description: >-
+            Probability of permissive MM. Probabilities calculated with allele
+            frequencies for DPB1, no linkage disequilibrium taken into account
+        probNph:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 100
+          description: >-
+            Probability for non-permissive MM in HvG direction. Probabilities
+            calculated with allele frequencies for DPB1, no linkage
+            disequilibrium taken into account
+        probNpg:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 100
+          description: >-
+            Probability for Nnon-permissive MM in GvH direction. Probabilities
+            calculated with allele frequencies for DPB1, no linkage
+            disequilibrium taken into account
+        probNd:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 100
+          description: >-
+            Probability for Not Determinable permissiveness. Probabilities
+            calculated with allele frequencies for DPB1, no linkage
+            disequilibrium taken into account
+    patientStatusJSON:
+      type: object
+      properties:
+        pId:
+          allOf:
+            - $ref: '#/components/schemas/pId'
+        pOldStat:
+          allOf:
+            - $ref: '#/components/schemas/patientStatus'
+        pNewStat:
+          type: string
+          maxLength: 3
+          enum:
+            - SUS
+            - PRE
+            - ACT
+            - STP
+        reasonChng:
+          type: string
+          maxLength: 3
+          enum:
+            - ATX
+            - RMT
+            - UMT
+            - RCT
+            - UCT
+            - RPT
+            - UPT
+            - GCC
+            - BCC
+            - PDC
+            - PAT
+            - PPR
+            - ICH
+            - FND
+            - NDF
+            - COR
+            - HMM
+            - DRR
+            - OTH
+            - UNK
+            - SYS
+  securitySchemes:
+    wsmsOauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://{environment}.wmda.info/oauth/token'
